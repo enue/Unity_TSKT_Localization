@@ -1,0 +1,16 @@
+{
+    "name": "TSKT.Localization.Editor",
+    "references": [
+        "TSKT.Localization"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
