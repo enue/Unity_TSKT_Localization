@@ -11,6 +11,24 @@ Packages/manifest.json
 }
 ```
 
+## 初期化
+
+```cs
+public class Hoge
+{
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void Initialize()
+    {
+        Localization.Create(Load, DefaultLanguage);
+    }
+
+    static TableAsset Load()
+    {
+        return Resources.Load<TableAsset>("TableAsset");
+    }
+}
+```
+
 ## 翻訳辞書Json
 
 ### 構造
