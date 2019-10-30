@@ -19,7 +19,7 @@ public class Hoge
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Initialize()
     {
-        Localization.Create(Load, DefaultLanguage);
+        Localization.Create(Load, SystemLanguage.Japanese);
     }
 
     static TableAsset Load()
