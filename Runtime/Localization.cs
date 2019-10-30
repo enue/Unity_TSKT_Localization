@@ -7,7 +7,7 @@ namespace TSKT
 {
     public class Localization
     {
-        public static Localization Instance { get; private set; }
+        static Localization instance;
 
         System.Func<TableAsset> tableLoadTask;
         TableAsset table;
@@ -27,10 +27,10 @@ namespace TSKT
         SystemLanguage currentLanguage;
         static public SystemLanguage CurrentLanguage
         {
-            get => Instance.currentLanguage;
+            get => instance.currentLanguage;
             set
             {
-                Instance.currentLanguage = value;
+                instance.currentLanguage = value;
             }
         }
 
@@ -40,7 +40,7 @@ namespace TSKT
 
         public static void Create(System.Func<TableAsset> tableLoadTask, SystemLanguage language)
         {
-            Instance = new Localization
+            instance = new Localization
             {
                 tableLoadTask = tableLoadTask,
                 currentLanguage = language
@@ -49,7 +49,7 @@ namespace TSKT
 
         static public string Get(int key)
         {
-            return Instance.Table.Get(CurrentLanguage, key);
+            return instance.Table.Get(CurrentLanguage, key);
         }
 
         static public string Get(string key)
@@ -59,7 +59,7 @@ namespace TSKT
                 return key;
             }
 
-            return Instance.Table.Get(CurrentLanguage, key);
+            return instance.Table.Get(CurrentLanguage, key);
         }
 
         static public string Get(int key, params (string key, string value)[] args)
@@ -94,6 +94,6 @@ namespace TSKT
             }
         }
 
-        public static SystemLanguage[] Languages => Instance.Table.Languages;
+        public static SystemLanguage[] Languages => instance.Table.Languages;
     }
 }
