@@ -18,7 +18,10 @@ namespace TSKT
                 if (table == null)
                 {
                     table = tableLoadTask();
-                    tableLoadTask = null;
+                    if (table)
+                    {
+                        tableLoadTask = null;
+                    }
                 }
                 return table;
             }
