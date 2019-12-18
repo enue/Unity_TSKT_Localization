@@ -6,7 +6,7 @@ using System.IO;
 
 namespace TSKT.Localizations
 {
-    [CreateAssetMenu(fileName = "TableAsset", menuName = "Localization Table", order = 1023)]
+    [CreateAssetMenu(fileName = "TableAsset", menuName = "TSKT/Localization Table", order = 1023)]
     public class TableAsset : ScriptableObject
     {
         [System.Serializable]
@@ -283,7 +283,7 @@ namespace TSKT.Localizations
             builder.AppendLine("    }");
             builder.AppendLine("}");
 
-            System.IO.File.WriteAllText("Assets/Entity/Generated/TableKey.cs", builder.ToString());
+            System.IO.File.WriteAllText("Assets/Generated/TableKey.cs", builder.ToString());
         }
 #endif
     }

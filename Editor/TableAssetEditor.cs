@@ -16,7 +16,11 @@ namespace TSKT.Localizations
                 var obj = (TableAsset)target;
                 obj.Build();
                 EditorUtility.SetDirty(obj);
+            }
 
+            if (GUILayout.Button("Generate Code"))
+            {
+                var obj = (TableAsset)target;
                 obj.GenerateCode();
             }
 
