@@ -9,16 +9,16 @@ namespace TSKT
     {
         static Localization instance;
 
-        System.Func<TableAsset> tableLoadTask;
-        TableAsset table;
-        TableAsset Table
+        System.Func<Table> tableLoadTask;
+        Table table;
+        Table Table
         {
             get
             {
                 if (table == null)
                 {
                     table = tableLoadTask();
-                    if (table)
+                    if (table != null)
                     {
                         tableLoadTask = null;
                     }
@@ -41,7 +41,7 @@ namespace TSKT
         {
         }
 
-        public static void Create(System.Func<TableAsset> tableLoadTask, SystemLanguage language)
+        public static void Create(System.Func<Table> tableLoadTask, SystemLanguage language)
         {
             instance = new Localization
             {

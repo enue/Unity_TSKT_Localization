@@ -11,10 +11,10 @@ namespace TSKT.Localizations
     {
         public override void OnInspectorGUI()
         {
-            if (GUILayout.Button("Build"))
+            if (GUILayout.Button("Read From Files"))
             {
                 var obj = (TableAsset)target;
-                obj.Build();
+                obj.Table = Sheet.CreateFromFiles().ToTable();
                 EditorUtility.SetDirty(obj);
             }
 
@@ -27,29 +27,23 @@ namespace TSKT.Localizations
             if (GUILayout.Button("Stat"))
             {
                 var obj = (TableAsset)target;
-                Debug.Log("japanese length : " + obj.JapaneseTotalLength.ToString());
+                Debug.Log("japanese length : " + obj.Table.JapaneseTotalLength.ToString());
 
-                var wordCountMap = obj.WordCountMap;
-                var englishCoverage = (float)wordCountMap[SystemLanguage.English] / wordCountMap[SystemLanguage.Japanese];
-                Debug.Log("Enghlish coverage : " + englishCoverage.ToString());
-
-                if (wordCountMap.ContainsKey(SystemLanguage.ChineseSimplified))
+                foreach(var it in LocalizationSetting.Instance.Languages)
                 {
-                    var simplifiedChineseCoverage = (float)wordCountMap[SystemLanguage.ChineseSimplified] / wordCountMap[SystemLanguage.Japanese];
-                    Debug.Log("Simplified chinese coverage : " + simplifiedChineseCoverage.ToString());
-                }
-
-                if (wordCountMap.ContainsKey(SystemLanguage.ChineseTraditional))
-                {
-                    var traditionalChineseCoverage = (float)wordCountMap[SystemLanguage.ChineseTraditional] / wordCountMap[SystemLanguage.Japanese];
-                    Debug.Log("Traditional chinese coverage : " + traditionalChineseCoverage.ToString());
+                    if (it != SystemLanguage.Japanese)
+                    {
+                        var wordCountMap = obj.Table.WordCountMap;
+                        var coverage = (float)wordCountMap[it] / wordCountMap[SystemLanguage.Japanese];
+                        Debug.Log(it.ToString() + " coverage : " + coverage.ToString());
+                    }
                 }
             }
 
             if (GUILayout.Button("Verify"))
             {
                 var obj = (TableAsset)target;
-                obj.Verify();
+                obj.Table.Verify();
             }
 
             DrawDefaultInspector();
