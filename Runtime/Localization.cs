@@ -97,6 +97,6 @@ namespace TSKT
             }
         }
 
-        public static SystemLanguage[] Languages => instance.Table.Languages;
+        public static SystemLanguage[] Languages => instance?.Table?.Languages;
     }
 }
