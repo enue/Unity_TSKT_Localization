@@ -73,6 +73,11 @@ namespace TSKT
 
         public string Localize()
         {
+            return Localize(Localization.CurrentLanguage);
+        }
+
+        public string Localize(SystemLanguage language)
+        {
             if (hasRawString)
             {
                 return rawString;
@@ -81,11 +86,11 @@ namespace TSKT
             {
                 if (args != null && args.Length > 0)
                 {
-                    return Localization.Get(rawKey, args);
+                    return Localization.Get(language, rawKey, args);
                 }
                 else
                 {
-                    return Localization.Get(rawKey);
+                    return Localization.Get(language, rawKey);
                 }
             }
 
@@ -93,11 +98,11 @@ namespace TSKT
             {
                 if (args != null && args.Length > 0)
                 {
-                    return Localization.Get(index.Value, args);
+                    return Localization.Get(language, index.Value, args);
                 }
                 else
                 {
-                    return Localization.Get(index.Value);
+                    return Localization.Get(language, index.Value);
                 }
             }
 

@@ -52,22 +52,36 @@ namespace TSKT
 
         static public string Get(int key)
         {
-            return instance.Table.Get(CurrentLanguage, key);
+            return Get(CurrentLanguage, key);
+        }
+        static public string Get(SystemLanguage language, int key)
+        {
+            return instance.Table.Get(language, key);
         }
 
         static public string Get(string key)
+        {
+            return Get(CurrentLanguage, key);
+        }
+
+        static public string Get(SystemLanguage language, string key)
         {
             if (string.IsNullOrEmpty(key))
             {
                 return key;
             }
 
-            return instance.Table.Get(CurrentLanguage, key);
+            return instance.Table.Get(language, key);
         }
 
         static public string Get(int key, params (string key, string value)[] args)
         {
-            var value = Get(key);
+            return Get(CurrentLanguage, key, args);
+        }
+
+        static public string Get(SystemLanguage language, int key, params (string key, string value)[] args)
+        {
+            var value = Get(language, key);
             for (int i = 0; i < args.Length; ++i)
             {
                 Debug.Assert(value.Contains(args[i].key),
@@ -78,6 +92,11 @@ namespace TSKT
         }
 
         static public string Get(string key, params (string key, string value)[] args)
+        {
+            return Get(CurrentLanguage, key, args);
+        }
+
+        static public string Get(SystemLanguage language, string key, params (string key, string value)[] args)
         {
             var value = Get(key);
             for(int i=0; i<args.Length; ++i)
