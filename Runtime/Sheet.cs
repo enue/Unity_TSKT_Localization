@@ -138,17 +138,30 @@ namespace TSKT.Localizations
         }
 
 #if UNITY_STANDALONE || UNITY_EDITOR
-        static public Sheet CreateFromFiles()
+        static public Sheet CreateFromFolder(string folder)
+        {
+            var pathes = Directory.GetFiles(folder, "*.json", SearchOption.TopDirectoryOnly);
+            return CreateFromFiles(pathes);
+        }
+
+        static public Sheet CreateFromFiles(params string[] pathes)
+        {
+            var jsonStrings = new ArrayBuilder<string>(pathes.Length);
+            foreach (var path in pathes)
+            {
+                Debug.Log(path);
+                var jsonString = File.ReadAllText(path);
+                jsonStrings.Add(jsonString);
+            }
+            return CreateFromJsonStrings(jsonStrings.Array);
+        }
+
+        static public Sheet CreateFromJsonStrings(params string[] jsonStrings)
         {
             var mergedSheet = new Sheet();
 
-            var folder = Path.Combine(Path.GetDirectoryName(Application.dataPath), "Localization");
-            var pathes = Directory.GetFiles(folder, "*.json", SearchOption.TopDirectoryOnly);
-
-            foreach (var path in pathes)
+            foreach (var jsonString in jsonStrings)
             {
-                var jsonString = File.ReadAllText(path);
-
                 var sheet = JsonUtility.FromJson<Sheet>(jsonString);
                 Debug.Assert(sheet != null, "json parse error : " + jsonString);
 

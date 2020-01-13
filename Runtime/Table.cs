@@ -55,16 +55,13 @@ namespace TSKT.Localizations
 
         public SystemLanguage[] Languages => languages.Select(_ => _.code).ToArray();
 
-        public int JapaneseTotalLength
+        public int GetTotalLength(SystemLanguage language)
         {
-            get
-            {
-                return languages.First(_ => _.code == SystemLanguage.Japanese)
-                    .words
-                    .Where(_ => !string.IsNullOrEmpty(_))
-                    .Select(_ => _.Length)
-                    .Sum();
-            }
+            return languages.First(_ => _.code == language)
+                .words
+                .Where(_ => !string.IsNullOrEmpty(_))
+                .Select(_ => _.Length)
+                .Sum();
         }
 
         public Dictionary<SystemLanguage, int> WordCountMap
@@ -77,13 +74,13 @@ namespace TSKT.Localizations
             }
         }
 
-        public void Verify()
+        public void Verify(SystemLanguage defaultLanauage)
         {
-            var japanese = languages.First(_ => _.code == SystemLanguage.Japanese);
+            var japanese = languages.First(_ => _.code == defaultLanauage);
 
             foreach (var language in languages)
             {
-                if (language.code == SystemLanguage.Japanese)
+                if (language.code == defaultLanauage)
                 {
                     continue;
                 }
