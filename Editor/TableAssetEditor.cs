@@ -22,22 +22,30 @@ namespace TSKT.Localizations
                 }
             }
 
-            if (GUILayout.Button("Generate Code"))
+            if (GUILayout.Button("Generate key CS"))
             {
-                var obj = (TableAsset)target;
-                obj.GenerateCode();
+                var filename = EditorUtility.SaveFilePanelInProject("generate csharp code", "TableKey", "cs", "");
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    var obj = (TableAsset)target;
+                    var code = obj.GenerateCode();
+
+                    File.WriteAllText(filename, code);
+                }
             }
 
             if (GUILayout.Button("Stat"))
             {
                 var table = ((TableAsset)target).Table;
-                var wordCountMap = table.WordCountMap;
+                var keyCount = table.sortedKeys.Length;
+                Debug.Log("key count : " + keyCount);
 
+                var wordCountMap = table.WordCountMap;
                 foreach (var it in table.languages)
                 {
                     Debug.Log(it.code
-                        + ", length : " + table.GetTotalLength(it.code)
-                        + ", word : " + wordCountMap[it.code]);
+                        + ", word : " + wordCountMap[it.code]
+                        + ", length : " + table.GetTotalLength(it.code));
                 }
             }
 

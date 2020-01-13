@@ -24,7 +24,7 @@ namespace TSKT.Localizations
 
 #if UNITY_EDITOR
 
-        public void GenerateCode()
+        public string  GenerateCode()
         {
             var builder = new System.Text.StringBuilder();
             builder.AppendLine("namespace TSKT");
@@ -45,8 +45,7 @@ namespace TSKT.Localizations
             }
             builder.AppendLine("    }");
             builder.AppendLine("}");
-
-            System.IO.File.WriteAllText("Assets/Generated/TableKey.cs", builder.ToString());
+            return builder.ToString();
         }
 #endif
     }
