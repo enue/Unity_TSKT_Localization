@@ -59,17 +59,17 @@ namespace TSKT.Localizations
             }
         }
 
-        DoubleDictionary<SystemLanguage, string, string> CreateLanguageKeyTextDictionary()
+        DoubleDictionary<SystemLanguage, string, string> CreateLanguageKeyTextDictionary(params SystemLanguage[] languages)
         {
+            Debug.Assert(languages.Length > 0, "使う言語が何もしていされていません");
             var languageKeyWords = new DoubleDictionary<SystemLanguage, string, string>();
             foreach (var item in items)
             {
-                var japaneseText = item.pairs.FirstOrDefault(_ => _.language == SystemLanguage.Japanese.ToString())?.text;
                 foreach (var pair in item.pairs)
                 {
                     if (System.Enum.TryParse<SystemLanguage>(pair.language, out var lang))
                     {
-                        if (System.Array.IndexOf(LocalizationSetting.Instance.Languages, lang) < 0)
+                        if (System.Array.IndexOf(languages, lang) < 0)
                         {
                             continue;
                         }
@@ -80,19 +80,20 @@ namespace TSKT.Localizations
             return languageKeyWords;
         }
 
-        public Table ToTable()
+        public Table ToTable(params SystemLanguage[] languages)
         {
+            Debug.Assert(languages.Length > 0, "使う言語が何もしていされていません");
             var sortedKeys = items
                 .Select(_ => _.key)
                 .Distinct()
                 .ToArray();
             System.Array.Sort(sortedKeys, System.StringComparer.Ordinal);
 
-            var languages = new List<Table.Language>();
+            var langs = new List<Table.Language>();
 
-            foreach (var (languageCode, key, word) in CreateLanguageKeyTextDictionary())
+            foreach (var (languageCode, key, word) in CreateLanguageKeyTextDictionary(languages))
             {
-                var language = languages.FirstOrDefault(_ => _.code == languageCode);
+                var language = langs.FirstOrDefault(_ => _.code == languageCode);
                 if (language == null)
                 {
                     language = new Table.Language
@@ -100,7 +101,7 @@ namespace TSKT.Localizations
                         code = languageCode,
                         words = new string[sortedKeys.Length]
                     };
-                    languages.Add(language);
+                    langs.Add(language);
                 }
 
                 var i = System.Array.IndexOf(sortedKeys, key);
@@ -109,7 +110,7 @@ namespace TSKT.Localizations
                 language.words[i] = word;
             }
 
-            return new Table(sortedKeys, languages.ToArray());
+            return new Table(sortedKeys, langs.ToArray());
         }
 
         public static Sheet Create(DoubleDictionary<string, string, string> languageKeyTextDictionary)

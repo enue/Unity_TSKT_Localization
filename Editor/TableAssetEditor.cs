@@ -17,8 +17,20 @@ namespace TSKT.Localizations
                 if (!string.IsNullOrEmpty(folder))
                 {
                     var obj = (TableAsset)target;
-                    obj.Table = Sheet.CreateFromFolder(folder).ToTable();
-                    EditorUtility.SetDirty(obj);
+
+                    var setting = AssetDatabase.FindAssets("t:LocalizationSetting")
+                        .Select(AssetDatabase.GUIDToAssetPath)
+                        .Select(AssetDatabase.LoadAssetAtPath<LocalizationSetting>)
+                        .DefaultIfEmpty(null)
+                        .FirstOrDefault();
+
+                    Debug.Assert(setting, "not found LocalizationSetting");
+
+                    if (setting)
+                    {
+                        obj.Table = Sheet.CreateFromFolder(folder).ToTable(setting.Languages);
+                        EditorUtility.SetDirty(obj);
+                    }
                 }
             }
 
@@ -47,12 +59,6 @@ namespace TSKT.Localizations
                         + ", word : " + wordCountMap[it.code]
                         + ", length : " + table.GetTotalLength(it.code));
                 }
-            }
-
-            if (GUILayout.Button("Verify"))
-            {
-                var obj = (TableAsset)target;
-                obj.Table.Verify(SystemLanguage.Japanese);
             }
 
             DrawDefaultInspector();

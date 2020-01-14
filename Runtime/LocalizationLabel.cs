@@ -17,6 +17,15 @@ namespace TSKT.Localizations
 
         void OnEnable()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                if (Localization.Languages == null)
+                {
+                    return;
+                }
+            }
+#endif
             Refresh();
         }
 

@@ -73,35 +73,5 @@ namespace TSKT.Localizations
                     _ => _.words.Count(word => !string.IsNullOrEmpty(word)));
             }
         }
-
-        public void Verify(SystemLanguage defaultLanauage)
-        {
-            var japanese = languages.First(_ => _.code == defaultLanauage);
-
-            foreach (var language in languages)
-            {
-                if (language.code == defaultLanauage)
-                {
-                    continue;
-                }
-
-                for (int i = 0; i < sortedKeys.Length; ++i)
-                {
-                    // 日本語が設定されていないなら他の言語に値があろうがなかろうがエラーではない
-                    var jp = japanese.words[i];
-                    if (string.IsNullOrEmpty(jp))
-                    {
-                        continue;
-                    }
-
-                    // 日本語が設定されているのに他言語が設定されていない->エラーになるべき
-                    var word = language.words[i];
-                    if (string.IsNullOrEmpty(word))
-                    {
-                        Debug.Log("翻訳不足 : " + language.code + ", " + sortedKeys[i]);
-                    }
-                }
-            }
-        }
     }
 }
