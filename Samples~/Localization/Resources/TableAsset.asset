@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9deb789b38dc2d2498c7f60c1fe6878e, type: 3}
+  m_Name: TableAsset
+  m_EditorClassIdentifier: 
+  sortedKeys:
+  - Fuga
+  - Hoge
+  - Piyo
+  languages:
+  - code: 22
+    words:
+    - "\u793C\u5100\u304C\u4EBA\u3092\u4F5C\u308B"
+    - "\u9244\u306F\u71B1\u3044\u3046\u3061\u306B\u6253\u3066"
+    - "\u3044\u307E{hour}\u6642{minute}\u5206\u3067\u3059"
+  - code: 10
+    words:
+    - Manners make the man
+    - Strike while the iron is hot
+    - It's {hour}:{minute} now

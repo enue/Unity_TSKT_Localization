@@ -1,0 +1,43 @@
+{
+    "items": [
+        {
+            "key": "Hoge",
+            "pairs": [
+                {
+                    "language": "Japanese",
+                    "text": "鉄は熱いうちに打て"
+                },
+                {
+                    "language": "English",
+                    "text": "Strike while the iron is hot"
+                }
+            ]
+        },
+        {
+            "key": "Fuga",
+            "pairs": [
+                {
+                    "language": "Japanese",
+                    "text": "礼儀が人を作る"
+                },
+                {
+                    "language": "English",
+                    "text": "Manners make the man"
+                }
+            ]
+        },
+        {
+            "key": "Piyo",
+            "pairs": [
+                {
+                    "language": "Japanese",
+                    "text": "いま{hour}時{minute}分です"
+                },
+                {
+                    "language": "English",
+                    "text": "It's {hour}:{minute} now"
+                }
+            ]
+        }
+    ]
+}

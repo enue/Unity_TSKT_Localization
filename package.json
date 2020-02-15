@@ -1,12 +1,19 @@
 {
     "name": "com.github.enue.tskt_localization",
     "displayName": "TSKT Localization",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "unity": "2019.2",
     "description": "",
     "keywords": [],
     "category": "",
     "dependencies": {
         "com.github.enue.tskt_container": "0.5.2"
-    }
+    },
+    "samples": [
+        {
+            "displayName": "Localization",
+            "description": "Description for localization",
+            "path": "Samples~/Localization"
+        }
+    ]
 }

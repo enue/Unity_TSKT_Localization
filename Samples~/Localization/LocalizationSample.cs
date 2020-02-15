@@ -1,0 +1,54 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace TSKT
+{
+    public class LocalizationSample : MonoBehaviour
+    {
+        [SerializeField]
+        Text label = default;
+
+        [SerializeField]
+        Text timeLabel = default;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        static void Initialzie()
+        {
+            Localization.Create(
+                () => Resources.Load<Localizations.TableAsset>("TableAsset").Table,
+                SystemLanguage.Japanese);
+        }
+
+        void Start()
+        {
+            Refresh();
+        }
+
+        public void OnClickedJapaneseButton()
+        {
+            Localization.CurrentLanguage = SystemLanguage.Japanese;
+            Localization.ForceRefresh();
+            Refresh();
+        }
+
+        public void OnClickedEnglishButton()
+        {
+            Localization.CurrentLanguage = SystemLanguage.English;
+            Localization.ForceRefresh();
+            Refresh();
+        }
+
+        void Refresh()
+        {
+            label.text = Localization.Get(TableKey.Fuga);
+
+            var now = System.DateTime.Now;
+            var key = new LocalizationKey("Piyo",
+                ("{hour}", now.Hour.ToString()),
+                ("{minute}", now.Minute.ToString()));
+            timeLabel.text = key.Localize();
+        }
+    }
+}
