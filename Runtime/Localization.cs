@@ -74,36 +74,36 @@ namespace TSKT
             return instance.Table.Get(language, key);
         }
 
-        static public string Get(int key, params (string key, string value)[] args)
+        static public string Get(int key, params (string key, LocalizationKey value)[] args)
         {
             return Get(CurrentLanguage, key, args);
         }
 
-        static public string Get(SystemLanguage language, int key, params (string key, string value)[] args)
+        static public string Get(SystemLanguage language, int key, params (string key, LocalizationKey value)[] args)
         {
             var value = Get(language, key);
             for (int i = 0; i < args.Length; ++i)
             {
                 Debug.Assert(value.Contains(args[i].key),
                     value + "に" + args[i].key + "が見つかりません");
-                value = value.Replace(args[i].key, args[i].value);
+                value = value.Replace(args[i].key, args[i].value.Localize());
             }
             return value;
         }
 
-        static public string Get(string key, params (string key, string value)[] args)
+        static public string Get(string key, params (string key, LocalizationKey value)[] args)
         {
             return Get(CurrentLanguage, key, args);
         }
 
-        static public string Get(SystemLanguage language, string key, params (string key, string value)[] args)
+        static public string Get(SystemLanguage language, string key, params (string key, LocalizationKey value)[] args)
         {
-            var value = Get(key);
+            var value = Get(language, key);
             for(int i=0; i<args.Length; ++i)
             {
                 Debug.Assert(value.Contains(args[i].key),
                     value + "に" + args[i].key + "が見つかりません");
-                value = value.Replace(args[i].key, args[i].value);
+                value = value.Replace(args[i].key, args[i].value.Localize());
             }
             return value;
         }

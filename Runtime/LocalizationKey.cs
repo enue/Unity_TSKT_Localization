@@ -10,7 +10,7 @@ namespace TSKT
         readonly string rawString;
         readonly string rawKey;
         readonly int? index;
-        readonly (string key, string value)[] args;
+        readonly (string key, LocalizationKey value)[] args;
 
         static public LocalizationKey CreateRaw(string rawString)
         {
@@ -22,7 +22,7 @@ namespace TSKT
                 args: null);
         }
 
-        LocalizationKey(bool hasRawString, string rawString, string rawKey, int? index, (string key, string value)[] args)
+        LocalizationKey(bool hasRawString, string rawString, string rawKey, int? index, (string key, LocalizationKey value)[] args)
         {
             this.hasRawString = hasRawString;
             this.rawString = rawString;
@@ -41,7 +41,7 @@ namespace TSKT
             args = null;
         }
 
-        public LocalizationKey(string key, params (string key, string value)[] args)
+        public LocalizationKey(string key, params (string key, LocalizationKey value)[] args)
         {
             hasRawString = false;
             rawString = null;
@@ -61,7 +61,7 @@ namespace TSKT
             args = null;
         }
 
-        public LocalizationKey(int index, params (string key, string value)[] args)
+        public LocalizationKey(int index, params (string key, LocalizationKey value)[] args)
         {
             hasRawString = false;
             rawString = null;
@@ -73,6 +73,10 @@ namespace TSKT
 
         public string Localize()
         {
+            if (hasRawString)
+            {
+                return rawString;
+            }
             return Localize(Localization.CurrentLanguage);
         }
 
