@@ -114,6 +114,11 @@ namespace TSKT
             {
                 it.Refresh();
             }
+
+            foreach (var it in Object.FindObjectsOfType<FontSelector>())
+            {
+                it.Refresh();
+            }
         }
 
         public static SystemLanguage[] Languages => instance?.Table?.Languages;
