@@ -23,6 +23,11 @@ namespace TSKT.Localizations
             this.languages = languages;
         }
 
+        public int GetIndex(string key)
+        {
+            return System.Array.BinarySearch(sortedKeys, key, System.StringComparer.Ordinal);
+        }
+
         public string Get(SystemLanguage language, string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -30,7 +35,7 @@ namespace TSKT.Localizations
                 return key;
             }
 
-            var wordIndex = System.Array.BinarySearch(sortedKeys, key, System.StringComparer.Ordinal);
+            var wordIndex = GetIndex(key);
             if (wordIndex < 0)
             {
                 Debug.Assert(wordIndex >= 0, "not found translation : " + key + ", " + language);

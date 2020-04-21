@@ -108,6 +108,11 @@ namespace TSKT
             return value;
         }
 
+        static public int GetIndex(string key)
+        {
+            return instance.Table.GetIndex(key);
+        }
+
         public static void ForceRefresh()
         {
             foreach(var it in Object.FindObjectsOfType<LocalizationLabel>())
