@@ -1,15 +1,12 @@
-# Unty_TSKT_Localization
+# install
 
-Packages/manifest.json
+Unity Package Manager
 
-```json
-{
-  "dependencies": {
-    "com.github.enue.tskt_localization": "https://github.com/enue/Unity_TSKT_Localization.git",
-    "com.github.enue.tskt_container": "https://github.com/enue/Unity_TSKT_Container.git",
-  }
-}
-```
+add package from git url
+
++ `https://github.com/enue/Unity_TSKT_Container.git?path=Assets/Package`
++ `https://github.com/enue/Unity_TSKT_Localization.git?path=Assets/Package`
+
 
 ## 初期化
 
