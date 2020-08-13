@@ -9,23 +9,7 @@ namespace TSKT
     {
         static Localization instance;
 
-        System.Func<Table> tableLoadTask;
         Table table;
-        Table Table
-        {
-            get
-            {
-                if (table == null)
-                {
-                    table = tableLoadTask();
-                    if (table != null)
-                    {
-                        tableLoadTask = null;
-                    }
-                }
-                return table;
-            }
-        }
 
         SystemLanguage currentLanguage;
         static public SystemLanguage CurrentLanguage
@@ -41,13 +25,17 @@ namespace TSKT
         {
         }
 
-        public static void Create(System.Func<Table> tableLoadTask, SystemLanguage language)
+        public static void Create(SystemLanguage language)
         {
             instance = new Localization
             {
-                tableLoadTask = tableLoadTask,
                 currentLanguage = language
             };
+        }
+
+        public static void SetTable(Table table)
+        {
+            instance.table = table;
         }
 
         static public string Get(int key)
@@ -56,7 +44,7 @@ namespace TSKT
         }
         static public string Get(SystemLanguage language, int key)
         {
-            return instance.Table.Get(language, key);
+            return instance.table.Get(language, key);
         }
 
         static public string Get(string key)
@@ -71,7 +59,7 @@ namespace TSKT
                 return key;
             }
 
-            return instance.Table.Get(language, key);
+            return instance.table.Get(language, key);
         }
 
         static public string Get(int key, params (string key, LocalizationKey value)[] args)
@@ -110,7 +98,7 @@ namespace TSKT
 
         static public int GetIndex(string key)
         {
-            return instance.Table.GetIndex(key);
+            return instance.table.GetIndex(key);
         }
 
         public static void ForceRefresh()
@@ -126,6 +114,6 @@ namespace TSKT
             }
         }
 
-        public static SystemLanguage[] Languages => instance?.Table?.Languages;
+        public static SystemLanguage[] Languages => instance?.table?.Languages;
     }
 }
