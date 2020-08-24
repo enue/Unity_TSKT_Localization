@@ -71,6 +71,25 @@ namespace TSKT
             this.args = args;
         }
 
+        public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
+        {
+            if (this.args == null || this.args.Length == 0)
+            {
+                return new LocalizationKey(hasRawString, rawString, rawKey, index, args);
+            }
+
+            var builder = new ArrayBuilder<(string, LocalizationKey)>(this.args.Length + args.Length);
+            foreach (var it in this.args)
+            {
+                builder.Add(it);
+            }
+            foreach(var it in args)
+            {
+                builder.Add(it);
+            }
+            return new LocalizationKey(hasRawString, rawString, rawKey, index, builder.Array);
+        }
+
         public string Localize()
         {
             if (hasRawString)
