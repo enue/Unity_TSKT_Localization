@@ -30,20 +30,39 @@ namespace TSKT.Localizations
             builder.AppendLine("namespace TSKT");
             builder.AppendLine("{");
 
-            builder.AppendLine("    public static class TableKey");
-            builder.AppendLine("    {");
-            for (int index = 0; index < sortedKeys.Length; ++index)
+            var identifiers = sortedKeys.Select(_ =>
+                _.Replace('.', '_')
+                .Replace("%", "percent")
+                .Replace("+", "plus")
+                .Replace("\'", "quotation")
+                .Replace("?", "question")
+                .Replace("？", "question"));
+
+
             {
-                var identifier = sortedKeys[index]
-                    .Replace('.', '_')
-                    .Replace("%", "percent")
-                    .Replace("+", "plus")
-                    .Replace("\'", "quotation")
-                    .Replace("?", "question")
-                    .Replace("？", "question");
-                builder.AppendLine("        public const int " +  identifier + " = " + index.ToString() + ";");
+                builder.AppendLine("    public static class TableKey");
+                builder.AppendLine("    {");
+                var index = 0;
+                foreach (var identifier in identifiers)
+                {
+                    builder.AppendLine("        public const int " + identifier + " = " + index.ToString() + ";");
+                    ++index;
+                }
+                builder.AppendLine("    }");
             }
-            builder.AppendLine("    }");
+
+            builder.AppendLine();
+
+            {
+                builder.AppendLine("    public static class AutoLocalizationKey");
+                builder.AppendLine("    {");
+                foreach (var identifier in identifiers)
+                {
+                    builder.AppendLine("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
+                }
+                builder.AppendLine("    }");
+            }
+
             builder.AppendLine("}");
             return builder.ToString();
         }
