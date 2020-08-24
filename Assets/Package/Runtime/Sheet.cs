@@ -156,6 +156,7 @@ namespace TSKT.Localizations
             }
             return CreateFromJsonStrings(jsonStrings.Array);
         }
+#endif
 
         static public Sheet CreateFromJsonStrings(params string[] jsonStrings)
         {
@@ -174,6 +175,27 @@ namespace TSKT.Localizations
 
             return mergedSheet;
         }
-#endif
+
+        static public Sheet FromSpreadsheet(string[][] cells)
+        {
+            var dict = new DoubleDictionary<string, string, string>();
+
+            foreach (var row in cells.Skip(1))
+            {
+                var id = row[0];
+                if (string.IsNullOrEmpty(id))
+                {
+                    continue;
+                }
+                for (int i = 1; i < row.Length; ++i)
+                {
+                    var cell = row[i];
+                    var lang = cells[0][i];
+                    dict.Add(lang, id, cell);
+                }
+            }
+
+            return Create(dict);
+        }
     }
 }
