@@ -124,5 +124,14 @@ namespace TSKT
             }
             return System.Array.IndexOf(langs, language) >= 0;
         }
+
+        public static SystemLanguage GetPreferredLanguageForDevice(SystemLanguage fallback)
+        {
+            if (Contains(Application.systemLanguage))
+            {
+                return Application.systemLanguage;
+            }
+            return fallback;
+        }
     }
 }
