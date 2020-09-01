@@ -8,34 +8,34 @@ namespace TSKT
     public class Localization
     {
         static Localization instance;
+        static Localization Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Localization();
+                }
+                return instance;
+            }
+        }
 
         Table table;
 
         SystemLanguage currentLanguage;
         static public SystemLanguage CurrentLanguage
         {
-            get => instance.currentLanguage;
-            set
-            {
-                instance.currentLanguage = value;
-            }
+            get => Instance.currentLanguage;
+            set => Instance.currentLanguage = value;
         }
 
         Localization()
         {
         }
 
-        public static void Create(SystemLanguage language)
-        {
-            instance = new Localization
-            {
-                currentLanguage = language
-            };
-        }
-
         public static void SetTable(Table table)
         {
-            instance.table = table;
+            Instance.table = table;
         }
 
         static public string Get(int key)

@@ -16,7 +16,7 @@ namespace TSKT
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Initialzie()
         {
-            Localization.Create(SystemLanguage.Japanese);
+            Localization.CurrentLanguage = SystemLanguage.Japanese;
             Localization.SetTable(Resources.Load<Localizations.TableAsset>("TableAsset").Table);
         }
 
