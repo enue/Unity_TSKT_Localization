@@ -122,7 +122,7 @@ namespace TSKT
             {
                 return false;
             }
-            return System.Array.IndexOf(langs, language) > 0;
+            return System.Array.IndexOf(langs, language) >= 0;
         }
     }
 }
