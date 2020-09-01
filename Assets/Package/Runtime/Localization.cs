@@ -115,5 +115,14 @@ namespace TSKT
         }
 
         public static SystemLanguage[] Languages => instance?.table?.Languages;
+        public static bool Contains(SystemLanguage language)
+        {
+            var langs = Languages;
+            if (langs == null)
+            {
+                return false;
+            }
+            return System.Array.IndexOf(langs, language) > 0;
+        }
     }
 }
