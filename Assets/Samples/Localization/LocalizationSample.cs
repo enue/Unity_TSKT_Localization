@@ -28,14 +28,12 @@ namespace TSKT
         public void OnClickedJapaneseButton()
         {
             Localization.CurrentLanguage = SystemLanguage.Japanese;
-            Localization.ForceRefresh();
             Refresh();
         }
 
         public void OnClickedEnglishButton()
         {
             Localization.CurrentLanguage = SystemLanguage.English;
-            Localization.ForceRefresh();
             Refresh();
         }
 
