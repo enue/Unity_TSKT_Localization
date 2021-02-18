@@ -71,7 +71,7 @@ namespace TSKT
             this.args = args;
         }
 
-        public LocalizationKey Replace(params (string key, string value)[] args)
+        readonly public LocalizationKey Replace(params (string key, string value)[] args)
         {
             if (this.args == null || this.args.Length == 0)
             {
@@ -90,7 +90,7 @@ namespace TSKT
             return new LocalizationKey(hasRawString, rawString, rawKey, index, builder.Array);
         }
 
-        public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
+        readonly public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
         {
             if (this.args == null || this.args.Length == 0)
             {
@@ -109,7 +109,7 @@ namespace TSKT
             return new LocalizationKey(hasRawString, rawString, rawKey, index, builder.Array);
         }
 
-        public string Localize()
+        readonly public string Localize()
         {
             if (hasRawString)
             {
@@ -118,7 +118,7 @@ namespace TSKT
             return Localize(Localization.CurrentLanguage);
         }
 
-        public string Localize(SystemLanguage language)
+        readonly public string Localize(SystemLanguage language)
         {
             if (hasRawString)
             {
@@ -152,7 +152,7 @@ namespace TSKT
             return "";
         }
 
-        public bool Empty
+        readonly public bool Empty
         {
             get
             {
