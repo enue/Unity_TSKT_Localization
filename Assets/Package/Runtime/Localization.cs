@@ -82,11 +82,9 @@ namespace TSKT
         static public string Get(SystemLanguage language, int key, params (string key, LocalizationKey value)[] args)
         {
             var value = Get(language, key);
-            for (int i = 0; i < args.Length; ++i)
+            foreach (var (_key, _value) in args)
             {
-                Debug.Assert(value.Contains(args[i].key),
-                    value + "に" + args[i].key + "が見つかりません");
-                value = value.Replace(args[i].key, args[i].value.Localize());
+                value = value.Replace(_key, _value.Localize());
             }
             return value;
         }
@@ -99,11 +97,9 @@ namespace TSKT
         static public string Get(SystemLanguage language, string key, params (string key, LocalizationKey value)[] args)
         {
             var value = Get(language, key);
-            for(int i=0; i<args.Length; ++i)
+            foreach (var (_key, _value) in args)
             {
-                Debug.Assert(value.Contains(args[i].key),
-                    value + "に" + args[i].key + "が見つかりません");
-                value = value.Replace(args[i].key, args[i].value.Localize());
+                value = value.Replace(_key, _value.Localize());
             }
             return value;
         }
