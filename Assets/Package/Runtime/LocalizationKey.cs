@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if TSKT_LOCALIZATION_SUPPORT_UNIRX
+using UniRx;
+#endif
 
 namespace TSKT
 {
@@ -154,5 +157,15 @@ namespace TSKT
                     && !index.HasValue;
             }
         }
+
+#if TSKT_LOCALIZATION_SUPPORT_UNIRX
+        public ReadOnlyReactiveProperty<string> ToReadOnlyReactiveProperty()
+        {
+            var clone = this;
+            return Localization.currentLanguage
+                .Select(_ => clone.Localize(_))
+                .ToReadOnlyReactiveProperty();
+        }
+#endif
     }
 }
