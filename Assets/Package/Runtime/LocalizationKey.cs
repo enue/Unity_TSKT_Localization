@@ -146,6 +146,38 @@ namespace TSKT
                 });
             }
         }
+        readonly public LocalizationKey Concat(LocalizationKey right)
+        {
+            if (Fixed && right.Fixed)
+            {
+                return CreateRaw(Localize() + right.Localize());
+            }
+            else if (Fixed)
+            {
+                var left = Localize();
+                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                {
+                    return left + right.Localize(_);
+                });
+            }
+            else if (right.Fixed)
+            {
+                var left = this;
+                var _right = right.Localize();
+                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                {
+                    return left.Localize(_) + _right;
+                });
+            }
+            else
+            {
+                var left = this;
+                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                {
+                    return left.Localize(_) + right.Localize(_);
+                });
+            }
+        }
 
         readonly public string Localize()
         {

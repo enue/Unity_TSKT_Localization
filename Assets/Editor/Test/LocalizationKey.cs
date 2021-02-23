@@ -29,6 +29,15 @@ namespace TSKT.Tests
             Assert.False(LocalizationKey.CreateRaw("hoge").Replace(("hoge", new LocalizationKey("k"))).Fixed);
             Assert.True(LocalizationKey.CreateRaw("hoge").Replace(("hoge", LocalizationKey.CreateRaw("piyo"))).Fixed);
         }
+
+        [Test]
+        public void Concat()
+        {
+            var left = LocalizationKey.CreateRaw("hoge");
+            var right = LocalizationKey.CreateRaw("fuga");
+            var hogefuga = left.Concat(right);
+            Assert.AreEqual("hogefuga", hogefuga.Localize());
+        }
     }
 }
 
