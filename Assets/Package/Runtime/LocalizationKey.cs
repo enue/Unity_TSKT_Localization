@@ -8,9 +8,9 @@ namespace TSKT
     {
         readonly bool hasRawString;
         readonly string rawString;
-        readonly string rawKey;
+        readonly string key;
         readonly int? index;
-        readonly (string key, LocalizationKey value)[] args;
+        readonly (string key, LocalizationKey value)[] replacers;
 
         static public LocalizationKey CreateRaw(string rawString)
         {
@@ -26,9 +26,9 @@ namespace TSKT
         {
             this.hasRawString = hasRawString;
             this.rawString = rawString;
-            this.rawKey = rawKey;
+            key = rawKey;
             this.index = index;
-            this.args = args;
+            replacers = args;
         }
 
         public LocalizationKey(string key)
@@ -37,8 +37,8 @@ namespace TSKT
             rawString = null;
             index = null;
 
-            rawKey = key;
-            args = null;
+            this.key = key;
+            replacers = null;
         }
 
         public LocalizationKey(string key, params (string key, LocalizationKey value)[] args)
@@ -47,58 +47,56 @@ namespace TSKT
             rawString = null;
             index = null;
 
-            rawKey = key;
-            this.args = args;
+            this.key = key;
+            replacers = args;
         }
 
         public LocalizationKey(int index)
         {
             hasRawString = false;
             rawString = null;
-            rawKey = null;
+            key = null;
 
             this.index = index;
-            args = null;
+            replacers = null;
         }
 
         public LocalizationKey(int index, params (string key, LocalizationKey value)[] args)
         {
             hasRawString = false;
             rawString = null;
-            rawKey = null;
+            key = null;
 
             this.index = index;
-            this.args = args;
+            replacers = args;
         }
 
         readonly public LocalizationKey Replace(params (string key, string value)[] args)
         {
-            if (this.args == null || this.args.Length == 0)
+            var builder = new ArrayBuilder<(string, LocalizationKey)>((replacers?.Length ?? 0) + args.Length);
+            if (replacers != null)
             {
-                return new LocalizationKey(hasRawString, rawString, rawKey, index, System.Array.Empty<(string key, LocalizationKey value)>());
-            }
-
-            var builder = new ArrayBuilder<(string, LocalizationKey)>(this.args.Length + args.Length);
-            foreach (var it in this.args)
-            {
-                builder.Add(it);
+                foreach (var it in replacers)
+                {
+                    builder.Add(it);
+                }
             }
             foreach (var (key, value) in args)
             {
                 builder.Add((key, CreateRaw(value)));
             }
-            return new LocalizationKey(hasRawString, rawString, rawKey, index, builder.Array);
+            return new LocalizationKey(hasRawString, rawString, key, index, builder.Array);
         }
 
         readonly public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
         {
-            if (this.args == null || this.args.Length == 0)
+            if (replacers == null || replacers.Length == 0)
             {
-                return new LocalizationKey(hasRawString, rawString, rawKey, index, args);
+                return new LocalizationKey(hasRawString, rawString, key, index, args);
             }
 
-            var builder = new ArrayBuilder<(string, LocalizationKey)>(this.args.Length + args.Length);
-            foreach (var it in this.args)
+            var builder = new ArrayBuilder<(string, LocalizationKey)>(replacers.Length + args.Length);
+            foreach (var it in replacers)
             {
                 builder.Add(it);
             }
@@ -106,50 +104,44 @@ namespace TSKT
             {
                 builder.Add(it);
             }
-            return new LocalizationKey(hasRawString, rawString, rawKey, index, builder.Array);
+            return new LocalizationKey(hasRawString, rawString, key, index, builder.Array);
         }
 
         readonly public string Localize()
         {
-            if (hasRawString)
-            {
-                return rawString;
-            }
             return Localize(Localization.CurrentLanguage);
         }
 
         readonly public string Localize(SystemLanguage language)
         {
+            string result;
             if (hasRawString)
             {
-                return rawString;
+                result = rawString;
             }
-            if (rawKey != null)
+            else if (key != null)
             {
-                if (args != null && args.Length > 0)
+                result = Localization.Get(language, key);
+            }
+            else if (index.HasValue)
+            {
+                result = Localization.Get(language, index.Value);
+            }
+            else
+            {
+                // empty
+                return "";
+            }
+
+            if (replacers != null)
+            {
+                foreach (var it in replacers)
                 {
-                    return Localization.Get(language, rawKey, args);
-                }
-                else
-                {
-                    return Localization.Get(language, rawKey);
+                    result = result.Replace(it.key, it.value.Localize(language));
                 }
             }
 
-            if (index.HasValue)
-            {
-                if (args != null && args.Length > 0)
-                {
-                    return Localization.Get(language, index.Value, args);
-                }
-                else
-                {
-                    return Localization.Get(language, index.Value);
-                }
-            }
-
-            // empty
-            return "";
+            return result;
         }
 
         readonly public bool Empty
@@ -158,7 +150,7 @@ namespace TSKT
             {
                 return
                     !hasRawString
-                    && rawKey == null
+                    && key == null
                     && !index.HasValue;
             }
         }
