@@ -18,6 +18,17 @@ namespace TSKT.Tests
             Assert.AreEqual("fugafuga", fuga.Localize());
             Assert.AreEqual("piyopiyo", piyo.Localize());
         }
+
+        [Test]
+        public void Fixed()
+        {
+            Assert.True(LocalizationKey.CreateRaw("hoge").Fixed);
+            Assert.False(new LocalizationKey("hoge").Fixed);
+            Assert.False(new LocalizationKey(0).Fixed);
+            Assert.True(LocalizationKey.CreateRaw("hoge").Replace(("hoge", "piyo")).Fixed);
+            Assert.False(LocalizationKey.CreateRaw("hoge").Replace(("hoge", new LocalizationKey("k"))).Fixed);
+            Assert.True(LocalizationKey.CreateRaw("hoge").Replace(("hoge", LocalizationKey.CreateRaw("piyo"))).Fixed);
+        }
     }
 }
 

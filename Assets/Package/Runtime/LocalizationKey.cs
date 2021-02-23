@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
 using UniRx;
 #endif
@@ -76,6 +77,16 @@ namespace TSKT
 
         readonly public LocalizationKey Replace(params (string key, string value)[] args)
         {
+            if (Fixed)
+            {
+                var text = Localize();
+                foreach(var it in args)
+                {
+                    text = text.Replace(it.key, it.value);
+                }
+                return CreateRaw(text);
+            }
+
             var builder = new ArrayBuilder<(string, LocalizationKey)>((replacers?.Length ?? 0) + args.Length);
             if (replacers != null)
             {
@@ -93,21 +104,30 @@ namespace TSKT
 
         readonly public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
         {
+            LocalizationKey result;
             if (replacers == null || replacers.Length == 0)
             {
-                return new LocalizationKey(hasRawString, rawString, key, index, args);
+                result = new LocalizationKey(hasRawString, rawString, key, index, args);
+            }
+            else
+            {
+                var builder = new ArrayBuilder<(string, LocalizationKey)>(replacers.Length + args.Length);
+                foreach (var it in replacers)
+                {
+                    builder.Add(it);
+                }
+                foreach (var it in args)
+                {
+                    builder.Add(it);
+                }
+                result = new LocalizationKey(hasRawString, rawString, key, index, builder.Array);
             }
 
-            var builder = new ArrayBuilder<(string, LocalizationKey)>(replacers.Length + args.Length);
-            foreach (var it in replacers)
+            if (result.Fixed)
             {
-                builder.Add(it);
+                result = CreateRaw(result.Localize());
             }
-            foreach(var it in args)
-            {
-                builder.Add(it);
-            }
-            return new LocalizationKey(hasRawString, rawString, key, index, builder.Array);
+            return result;
         }
 
         readonly public string Localize()
@@ -158,9 +178,41 @@ namespace TSKT
             }
         }
 
+        public bool Fixed
+        {
+            get
+            {
+                if (Empty)
+                {
+                    return true;
+                }
+                if (hasRawString)
+                {
+                    if (replacers == null)
+                    {
+                        return true;
+                    }
+                    foreach (var it in replacers)
+                    {
+                        if (!it.value.Fixed)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+        }
+
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
         public ReadOnlyReactiveProperty<string> ToReadOnlyReactiveProperty()
         {
+            if (Fixed)
+            {
+                return new ReactiveProperty<string>(Localize()).ToReadOnlyReactiveProperty();
+            }
+
             var clone = this;
             return Localization.currentLanguage
                 .Select(_ => clone.Localize(_))
