@@ -14,7 +14,7 @@ namespace TSKT
         readonly string rawString;
         readonly string key;
         readonly int? index;
-        readonly (string key, LocalizationKey value)[] replacers;
+        readonly System.Func<SystemLanguage, string> factory;
 
         static public LocalizationKey CreateRaw(string rawString)
         {
@@ -23,16 +23,16 @@ namespace TSKT
                 rawString: rawString,
                 rawKey: null,
                 index: null,
-                args: null);
+                func: null);
         }
 
-        LocalizationKey(bool hasRawString, string rawString, string rawKey, int? index, (string key, LocalizationKey value)[] args)
+        LocalizationKey(bool hasRawString, string rawString, string rawKey, int? index, System.Func<SystemLanguage, string> func)
         {
             this.hasRawString = hasRawString;
             this.rawString = rawString;
             key = rawKey;
             this.index = index;
-            replacers = args;
+            factory = func;
         }
 
         public LocalizationKey(string key)
@@ -42,17 +42,12 @@ namespace TSKT
             index = null;
 
             this.key = key;
-            replacers = null;
+            factory = null;
         }
 
         public LocalizationKey(string key, params (string key, LocalizationKey value)[] args)
         {
-            hasRawString = false;
-            rawString = null;
-            index = null;
-
-            this.key = key;
-            replacers = args;
+            this = new LocalizationKey(key).Replace(args);
         }
 
         public LocalizationKey(int index)
@@ -62,17 +57,12 @@ namespace TSKT
             key = null;
 
             this.index = index;
-            replacers = null;
+            factory = null;
         }
 
         public LocalizationKey(int index, params (string key, LocalizationKey value)[] args)
         {
-            hasRawString = false;
-            rawString = null;
-            key = null;
-
-            this.index = index;
-            replacers = args;
+            this = new LocalizationKey(index).Replace(args);
         }
 
         readonly public LocalizationKey Replace(params (string key, string value)[] args)
@@ -87,47 +77,74 @@ namespace TSKT
                 return CreateRaw(text);
             }
 
-            var builder = new ArrayBuilder<(string, LocalizationKey)>((replacers?.Length ?? 0) + args.Length);
-            if (replacers != null)
+            var origin = this;
+            return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
             {
-                foreach (var it in replacers)
+                var result = origin.Localize(_);
+                foreach (var it in args)
                 {
-                    builder.Add(it);
+                    result = result.Replace(it.key, it.value);
                 }
-            }
-            foreach (var (key, value) in args)
-            {
-                builder.Add((key, CreateRaw(value)));
-            }
-            return new LocalizationKey(hasRawString, rawString, key, index, builder.Array);
+                return result;
+            });
         }
 
         readonly public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
         {
-            LocalizationKey result;
-            if (replacers == null || replacers.Length == 0)
+            if (Fixed)
             {
-                result = new LocalizationKey(hasRawString, rawString, key, index, args);
+                var origin = Localize();
+                var fixedCount = 0;
+                for (int i = 0; i < args.Length; ++i)
+                {
+                    if (args[i].value.Fixed)
+                    {
+                        origin = origin.Replace(args[i].key, args[i].value.Localize());
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    ++fixedCount;
+                }
+                (string key, LocalizationKey value)[] replacers;
+
+                if (fixedCount == args.Length)
+                {
+                    return CreateRaw(origin);
+                }
+                else if (fixedCount == 0)
+                {
+                    replacers = args;
+                }
+                else
+                {
+                    replacers = args.Skip(fixedCount).ToArray();
+                }
+
+                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                {
+                    var result = origin;
+                    foreach (var it in replacers)
+                    {
+                        result = result.Replace(it.key, it.value.Localize(_));
+                    }
+                    return result;
+                });
             }
             else
             {
-                var builder = new ArrayBuilder<(string, LocalizationKey)>(replacers.Length + args.Length);
-                foreach (var it in replacers)
+                var origin = this;
+                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
                 {
-                    builder.Add(it);
-                }
-                foreach (var it in args)
-                {
-                    builder.Add(it);
-                }
-                result = new LocalizationKey(hasRawString, rawString, key, index, builder.Array);
+                    var result = origin.Localize(_);
+                    foreach (var it in args)
+                    {
+                        result = result.Replace(it.key, it.value.Localize(_));
+                    }
+                    return result;
+                });
             }
-
-            if (result.Fixed)
-            {
-                result = CreateRaw(result.Localize());
-            }
-            return result;
         }
 
         readonly public string Localize()
@@ -137,34 +154,27 @@ namespace TSKT
 
         readonly public string Localize(SystemLanguage language)
         {
-            string result;
-            if (hasRawString)
+            if (factory != null)
             {
-                result = rawString;
+                return factory(language);
+            }
+            else if (hasRawString)
+            {
+                return rawString;
             }
             else if (key != null)
             {
-                result = Localization.Get(language, key);
+                return Localization.Get(language, key);
             }
             else if (index.HasValue)
             {
-                result = Localization.Get(language, index.Value);
+                return Localization.Get(language, index.Value);
             }
             else
             {
                 // empty
                 return "";
             }
-
-            if (replacers != null)
-            {
-                foreach (var it in replacers)
-                {
-                    result = result.Replace(it.key, it.value.Localize(language));
-                }
-            }
-
-            return result;
         }
 
         readonly public bool Empty
@@ -174,7 +184,8 @@ namespace TSKT
                 return
                     !hasRawString
                     && key == null
-                    && !index.HasValue;
+                    && !index.HasValue
+                    && factory == null;
             }
         }
 
@@ -186,22 +197,11 @@ namespace TSKT
                 {
                     return true;
                 }
-                if (hasRawString)
+                if (factory != null)
                 {
-                    if (replacers == null)
-                    {
-                        return true;
-                    }
-                    foreach (var it in replacers)
-                    {
-                        if (!it.value.Fixed)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
+                    return false;
                 }
-                return false;
+                return hasRawString;
             }
         }
 
