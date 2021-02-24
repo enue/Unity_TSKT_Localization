@@ -41,8 +41,8 @@ namespace TSKT
         }
         public LocalizationKeyBuilder AppendLine(LocalizationKey key)
         {
-            AppendLine();
             Append(key);
+            AppendLine();
             return this;
         }
 
