@@ -35,6 +35,16 @@ namespace TSKT
             factory = func;
         }
 
+        LocalizationKey(System.Func<SystemLanguage, string> factory)
+        {
+            hasRawString = false;
+            rawString = null;
+            index = null;
+
+            key = null;
+            this.factory = factory;
+        }
+
         public LocalizationKey(string key)
         {
             hasRawString = false;
@@ -78,7 +88,7 @@ namespace TSKT
             }
 
             var origin = this;
-            return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+            return new LocalizationKey(factory: _ =>
             {
                 var result = origin.Localize(_);
                 foreach (var it in args)
@@ -122,7 +132,7 @@ namespace TSKT
                     replacers = args.Skip(fixedCount).ToArray();
                 }
 
-                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                return new LocalizationKey(factory: _ =>
                 {
                     var result = origin;
                     foreach (var it in replacers)
@@ -135,7 +145,7 @@ namespace TSKT
             else
             {
                 var origin = this;
-                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                return new LocalizationKey(factory: _ =>
                 {
                     var result = origin.Localize(_);
                     foreach (var it in args)
@@ -155,7 +165,7 @@ namespace TSKT
             else if (Fixed)
             {
                 var left = Localize();
-                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                return new LocalizationKey(factory: _ =>
                 {
                     return left + right.Localize(_);
                 });
@@ -164,7 +174,7 @@ namespace TSKT
             {
                 var left = this;
                 var _right = right.Localize();
-                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                return new LocalizationKey(factory: _ =>
                 {
                     return left.Localize(_) + _right;
                 });
@@ -172,11 +182,52 @@ namespace TSKT
             else
             {
                 var left = this;
-                return new LocalizationKey(hasRawString: false, rawString: null, rawKey: null, index: null, func: _ =>
+                return new LocalizationKey(factory: _ =>
                 {
                     return left.Localize(_) + right.Localize(_);
                 });
             }
+        }
+        readonly public LocalizationKey Concat(params LocalizationKey[] values)
+        {
+            var items = new List<LocalizationKey>();
+            items.Add(this);
+
+            foreach (var it in values)
+            {
+                if (it.Fixed)
+                {
+                    var last = items[items.Count - 1];
+                    if (last.Fixed)
+                    {
+                        items[items.Count - 1] = last.Concat(it);
+                    }
+                    else
+                    {
+                        items.Add(it);
+                    }
+                }
+                else
+                {
+                    items.Add(it);
+                }
+            }
+
+            if (items.Count == 1)
+            {
+                return items[0];
+            }
+
+            return new LocalizationKey(factory: lang =>
+            {
+                var builder = new System.Text.StringBuilder();
+                foreach (var it in items)
+                {
+                    builder.Append(it.Localize(lang));
+                }
+                return builder.ToString();
+            });
+
         }
 
         readonly public string Localize()
@@ -251,5 +302,36 @@ namespace TSKT
                 .ToReadOnlyReactiveProperty();
         }
 #endif
+
+        static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
+        {
+            var builder = new LocalizationKeyBuilder();
+            var index = 0;
+            foreach (var it in values)
+            {
+                if (index > 0)
+                {
+                    builder.Append(separator);
+                }
+                builder.Append(it);
+                ++index;
+            }
+            return builder.ToLocalizationKey();
+        }
+        static public LocalizationKey Join(in LocalizationKey separator, params LocalizationKey[] values)
+        {
+            var builder = new LocalizationKeyBuilder();
+            var index = 0;
+            foreach (var it in values)
+            {
+                if (index > 0)
+                {
+                    builder.Append(separator);
+                }
+                builder.Append(it);
+                ++index;
+            }
+            return builder.ToLocalizationKey();
+        }
     }
 }

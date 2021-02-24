@@ -38,6 +38,17 @@ namespace TSKT.Tests
             var hogefuga = left.Concat(right);
             Assert.AreEqual("hogefuga", hogefuga.Localize());
         }
+
+        [Test]
+        public void Join()
+        {
+            var key = LocalizationKey.Join(
+                LocalizationKey.CreateRaw(", "),
+                LocalizationKey.CreateRaw("hoge"),
+                LocalizationKey.CreateRaw("fuga"),
+                LocalizationKey.CreateRaw("piyo"));
+            Assert.AreEqual("hoge, fuga, piyo", key.Localize());
+        }
     }
 }
 
