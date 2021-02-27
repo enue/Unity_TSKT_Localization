@@ -11,6 +11,11 @@ namespace TSKT
 
         public LocalizationKeyBuilder Append(LocalizationKey key)
         {
+            if (key.Empty)
+            {
+                return this;
+            }
+
             if (items.Count == 0)
             {
                 items.Add(key);
@@ -58,6 +63,22 @@ namespace TSKT
             }
 
             return items[0].Concat(items.Skip(1).ToArray());
+        }
+
+        public bool Empty
+        {
+            get
+            {
+                if (items.Count == 0)
+                {
+                    return true;
+                }
+                if (items.Count == 1)
+                {
+                    return items[0].Empty;
+                }
+                return false;
+            }
         }
     }
 }
