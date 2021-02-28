@@ -80,5 +80,15 @@ namespace TSKT
                 return false;
             }
         }
+
+        public override string ToString()
+        {
+            return ToLocalizationKey().Localize();
+        }
+
+        public string ToString(SystemLanguage lang)
+        {
+            return ToLocalizationKey().Localize(lang);
+        }
     }
 }
