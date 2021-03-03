@@ -227,7 +227,45 @@ namespace TSKT
                 }
                 return builder.ToString();
             });
+        }
 
+        readonly public LocalizationKey Select(System.Func<SystemLanguage, string, string> selector)
+        {
+            if (Fixed)
+            {
+                var origin = Localize();
+                return new LocalizationKey(_language =>
+                {
+                    return selector(_language, origin);
+                });
+            }
+            else
+            {
+                var origin = this;
+                return new LocalizationKey(_language =>
+                {
+                    var s = origin.Localize(_language);
+                    return selector(_language, s);
+                });
+            }
+        }
+        readonly public LocalizationKey Select(System.Func<string, string> selector)
+        {
+            if (Fixed)
+            {
+                var origin = Localize();
+                var result = selector(origin);
+                return CreateRaw(result);
+            }
+            else
+            {
+                var origin = this;
+                return new LocalizationKey(_language =>
+                {
+                    var s = origin.Localize(_language);
+                    return selector(s);
+                });
+            }
         }
 
         readonly public string Localize()
