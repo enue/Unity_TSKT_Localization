@@ -268,6 +268,23 @@ namespace TSKT
             }
         }
 
+        readonly public LocalizationKey Trim()
+        {
+            if (Fixed)
+            {
+                var result = Localize().Trim();
+                return CreateRaw(result);
+            }
+            else
+            {
+                var origin = this;
+                return new LocalizationKey(_language =>
+                {
+                    return origin.Localize(_language).Trim();
+                });
+            }
+        }
+
         readonly public string Localize()
         {
             return Localize(Localization.CurrentLanguage);
