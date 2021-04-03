@@ -75,6 +75,24 @@ namespace TSKT
             this = new LocalizationKey(index).Replace(args);
         }
 
+        readonly public LocalizationKey Replace(string key, string value)
+        {
+            if (Fixed)
+            {
+                var text = Localize();
+                text = text.Replace(key, value);
+                return CreateRaw(text);
+            }
+
+            var origin = this;
+            return new LocalizationKey(factory: _ =>
+            {
+                var result = origin.Localize(_);
+                result = result.Replace(key, value);
+                return result;
+            });
+        }
+
         readonly public LocalizationKey Replace(params (string key, string value)[] args)
         {
             if (Fixed)
@@ -97,6 +115,36 @@ namespace TSKT
                 }
                 return result;
             });
+        }
+
+        readonly public LocalizationKey Replace(string key, LocalizationKey value)
+        {
+            if (Fixed)
+            {
+                var origin = Localize();
+                if (value.Fixed)
+                {
+                    origin = origin.Replace(key, value.Localize());
+                    return CreateRaw(origin);
+                }
+
+                return new LocalizationKey(factory: _ =>
+                {
+                    var result = origin;
+                    result = result.Replace(key, value.Localize(_));
+                    return result;
+                });
+            }
+            else
+            {
+                var origin = this;
+                return new LocalizationKey(factory: _ =>
+                {
+                    var result = origin.Localize(_);
+                    result = result.Replace(key, value.Localize(_));
+                    return result;
+                });
+            }
         }
 
         readonly public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
