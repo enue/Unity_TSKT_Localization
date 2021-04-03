@@ -38,7 +38,6 @@ namespace TSKT.Localizations
                 .Replace("?", "question")
                 .Replace("？", "question"));
 
-
             {
                 builder.AppendLine("    public static class TableKey");
                 builder.AppendLine("    {");
@@ -56,9 +55,28 @@ namespace TSKT.Localizations
             {
                 builder.AppendLine("    public static class AutoLocalizationKey");
                 builder.AppendLine("    {");
+
+                var index = 0;
                 foreach (var identifier in identifiers)
                 {
-                    builder.AppendLine("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
+                    builder.Append("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
+
+                    if (languages != null
+                        && languages.Length > 0
+                        && languages[0].words != null
+                        && languages[0].words.Length > index
+                        && languages[0].words[index] != null)
+                    {
+                        var word = languages[0].words[index]
+                            .Replace("\n", null)
+                            .Replace("\r", null);
+                        builder.AppendLine(" // " + word);
+                    }
+                    else
+                    {
+                        builder.AppendLine();
+                    }
+                    ++index;
                 }
                 builder.AppendLine("    }");
             }
