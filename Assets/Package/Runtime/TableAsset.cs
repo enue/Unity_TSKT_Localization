@@ -59,8 +59,6 @@ namespace TSKT.Localizations
                 var index = 0;
                 foreach (var identifier in identifiers)
                 {
-                    builder.Append("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
-
                     if (languages != null
                         && languages.Length > 0
                         && languages[0].words != null
@@ -70,12 +68,12 @@ namespace TSKT.Localizations
                         var word = languages[0].words[index]
                             .Replace("\n", null)
                             .Replace("\r", null);
-                        builder.AppendLine(" // " + word);
+                        builder.AppendLine("        /// <summary>");
+                        builder.AppendLine("        /// " + word);
+                        builder.AppendLine("        /// </summary>");
                     }
-                    else
-                    {
-                        builder.AppendLine();
-                    }
+
+                    builder.AppendLine("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
                     ++index;
                 }
                 builder.AppendLine("    }");
