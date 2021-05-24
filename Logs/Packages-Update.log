@@ -95,3 +95,11 @@ The following packages were updated:
   com.unity.scriptablebuildpipeline from version 1.14.1 to 1.15.2
   com.unity.test-framework from version 1.1.22 to 1.1.24
   com.unity.textmeshpro from version 3.0.1 to 3.0.4
+
+=== Mon May 24 12:57:55 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 3.0.5 to 3.0.6
