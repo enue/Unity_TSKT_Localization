@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TSKT.Localizations;
@@ -10,7 +11,7 @@ namespace TSKT
 {
     public class Localization
     {
-        static Localization instance;
+        static Localization? instance;
         static Localization Instance
         {
             get
@@ -23,7 +24,7 @@ namespace TSKT
             }
         }
 
-        Table table;
+        Table? table;
 
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
         public static readonly ReactiveProperty<SystemLanguage> currentLanguage = new ReactiveProperty<SystemLanguage>(default);
@@ -50,16 +51,16 @@ namespace TSKT
             Instance.table = table;
         }
 
-        static public string Get(int key)
+        static public string? Get(int key)
         {
             return Get(CurrentLanguage, key);
         }
         static public string Get(SystemLanguage language, int key)
         {
-            return instance.table.Get(language, key);
+            return instance?.table?.Get(language, key) ?? key.ToString();
         }
 
-        static public string Get(string key)
+        static public string? Get(string key)
         {
             return Get(CurrentLanguage, key);
         }
@@ -71,7 +72,7 @@ namespace TSKT
                 return key;
             }
 
-            return instance.table.Get(language, key);
+            return instance?.table?.Get(language, key) ?? key;
         }
 
         static public string Get(int key, params (string key, LocalizationKey value)[] args)
@@ -106,7 +107,7 @@ namespace TSKT
 
         static public int GetIndex(string key)
         {
-            return instance.table.GetIndex(key);
+            return instance?.table?.GetIndex(key) ?? -1;
         }
 
 #if !TSKT_LOCALIZATION_SUPPORT_UNIRX
@@ -124,7 +125,7 @@ namespace TSKT
     }
 #endif
 
-        public static SystemLanguage[] Languages => instance?.table?.Languages;
+        public static SystemLanguage[]? Languages => instance?.table?.Languages;
         public static bool Contains(SystemLanguage language)
         {
             var langs = Languages;

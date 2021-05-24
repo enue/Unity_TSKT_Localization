@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace TSKT.Localizations
         public class Language
         {
             public SystemLanguage code;
-            public string[] words;
+            public string[] words = default!;
         }
 
         public readonly string[] sortedKeys;
@@ -28,7 +29,7 @@ namespace TSKT.Localizations
             return System.Array.BinarySearch(sortedKeys, key, System.StringComparer.Ordinal);
         }
 
-        public string Get(SystemLanguage language, string key)
+        public string? Get(SystemLanguage language, string key)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -45,7 +46,7 @@ namespace TSKT.Localizations
             return Get(language, wordIndex);
         }
 
-        public string Get(SystemLanguage language, int index)
+        public string? Get(SystemLanguage language, int index)
         {
             foreach (var it in languages)
             {

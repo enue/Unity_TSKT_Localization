@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -15,11 +16,11 @@ namespace TSKT.Localizations
             [System.Serializable]
             public class Pair
             {
-                public string language;
-                public string text;
+                public string language = default!;
+                public string text = default!;
             }
 
-            public string key;
+            public string key = default!;
             public List<Pair> pairs = new List<Pair>();
         }
 

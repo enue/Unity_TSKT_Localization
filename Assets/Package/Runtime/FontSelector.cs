@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,14 @@ namespace TSKT
     [RequireComponent(typeof(Text))]
     public class FontSelector : MonoBehaviour
     {
-        Text text;
-        Text Text => text ? text : (text = GetComponent<Text>());
+        Text? text;
+        Text Text => text ? text! : (text = GetComponent<Text>());
 
         [SerializeField]
-        SystemLanguage[] languages = default;
+        SystemLanguage[] languages = default!;
 
         [SerializeField]
-        Font[] fonts = default;
+        Font?[] fonts = default!;
 
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
         void Start()

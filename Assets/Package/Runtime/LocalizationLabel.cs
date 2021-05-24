@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,11 +13,11 @@ namespace TSKT.Localizations
     [RequireComponent(typeof(Text))]
     public class LocalizationLabel : MonoBehaviour
     {
-        Text text;
-        Text Text => text ? text : (text = GetComponent<Text>());
+        Text? text;
+        Text Text => text ? text! : (text = GetComponent<Text>());
 
         [SerializeField]
-        string key = default;
+        string key = default!;
 
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
         void Start()

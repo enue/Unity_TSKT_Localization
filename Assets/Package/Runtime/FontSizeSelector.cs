@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,14 +12,14 @@ namespace TSKT
     [RequireComponent(typeof(Text))]
     public class FontSizeSelector : MonoBehaviour
     {
-        Text text;
-        Text Text => text ? text : (text = GetComponent<Text>());
+        Text? text;
+        Text Text => text ? text! : (text = GetComponent<Text>());
 
         [SerializeField]
-        SystemLanguage[] languages = default;
+        SystemLanguage[] languages = default!;
 
         [SerializeField]
-        int[] fontSizes = default;
+        int[] fontSizes = default!;
 
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
         void Start()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace TSKT.Localizations
     [CreateAssetMenu(fileName = "TableAsset", menuName = "TSKT/Localization Table", order = 1023)]
     public class TableAsset : ScriptableObject
     {
-        public string[] sortedKeys = default;
-        public Table.Language[] languages = default;
+        public string[] sortedKeys = default!;
+        public Table.Language[] languages = default!;
 
         public Table Table
         {

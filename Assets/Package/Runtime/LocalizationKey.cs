@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -10,25 +11,22 @@ namespace TSKT
 {
     public readonly struct LocalizationKey
     {
-        readonly bool hasRawString;
-        readonly string rawString;
-        readonly string key;
+        readonly string? rawString;
+        readonly string? key;
         readonly int? index;
-        readonly System.Func<SystemLanguage, string> factory;
+        readonly System.Func<SystemLanguage, string>? factory;
 
         static public LocalizationKey CreateRaw(string rawString)
         {
             return new LocalizationKey(
-                hasRawString: true,
                 rawString: rawString,
                 rawKey: null,
                 index: null,
                 func: null);
         }
 
-        LocalizationKey(bool hasRawString, string rawString, string rawKey, int? index, System.Func<SystemLanguage, string> func)
+        LocalizationKey(string? rawString, string? rawKey, int? index, System.Func<SystemLanguage, string>? func)
         {
-            this.hasRawString = hasRawString;
             this.rawString = rawString;
             key = rawKey;
             this.index = index;
@@ -37,7 +35,6 @@ namespace TSKT
 
         LocalizationKey(System.Func<SystemLanguage, string> factory)
         {
-            hasRawString = false;
             rawString = null;
             index = null;
 
@@ -47,7 +44,6 @@ namespace TSKT
 
         public LocalizationKey(string key)
         {
-            hasRawString = false;
             rawString = null;
             index = null;
 
@@ -62,7 +58,6 @@ namespace TSKT
 
         public LocalizationKey(int index)
         {
-            hasRawString = false;
             rawString = null;
             key = null;
 
@@ -87,9 +82,9 @@ namespace TSKT
             var origin = this;
             return new LocalizationKey(factory: _ =>
             {
-                var result = origin.Localize(_);
+                var result = origin.Localize(_)!;
                 result = result.Replace(key, value);
-                return result;
+                return result!;
             });
         }
 
@@ -108,7 +103,7 @@ namespace TSKT
             var origin = this;
             return new LocalizationKey(factory: _ =>
             {
-                var result = origin.Localize(_);
+                var result = origin.Localize(_)!;
                 foreach (var it in args)
                 {
                     result = result.Replace(it.key, it.value);
@@ -140,7 +135,7 @@ namespace TSKT
                 var origin = this;
                 return new LocalizationKey(factory: _ =>
                 {
-                    var result = origin.Localize(_);
+                    var result = origin.Localize(_)!;
                     result = result.Replace(key, value.Localize(_));
                     return result;
                 });
@@ -195,7 +190,7 @@ namespace TSKT
                 var origin = this;
                 return new LocalizationKey(factory: _ =>
                 {
-                    var result = origin.Localize(_);
+                    var result = origin.Localize(_)!;
                     foreach (var it in args)
                     {
                         result = result.Replace(it.key, it.value.Localize(_));
@@ -344,7 +339,7 @@ namespace TSKT
             {
                 return factory(language);
             }
-            else if (hasRawString)
+            else if (rawString != null)
             {
                 return rawString;
             }
@@ -368,7 +363,7 @@ namespace TSKT
             get
             {
                 return
-                    !hasRawString
+                    rawString == null
                     && key == null
                     && !index.HasValue
                     && factory == null;
@@ -387,7 +382,7 @@ namespace TSKT
                 {
                     return false;
                 }
-                return hasRawString;
+                return rawString != null;
             }
         }
 
