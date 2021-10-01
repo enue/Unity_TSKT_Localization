@@ -103,3 +103,31 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.ide.rider from version 3.0.5 to 3.0.6
+
+=== Tue Jun 22 22:03:31 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 3.0.6 to 3.0.7
+  com.unity.ide.visualstudio from version 2.0.7 to 2.0.9
+  com.unity.textmeshpro from version 3.0.4 to 3.0.6
+
+=== Mon Sep 13 14:24:09 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.visualstudio from version 2.0.9 to 2.0.11
+  com.unity.scriptablebuildpipeline from version 1.15.2 to 1.19.0
+  com.unity.test-framework from version 1.1.27 to 1.1.29
+
+=== Sat Oct  2 08:36:55 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.vscode from version 1.2.3 to 1.2.4
