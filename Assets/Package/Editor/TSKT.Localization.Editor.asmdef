@@ -1,7 +1,8 @@
 {
     "name": "TSKT.Localization.Editor",
+    "rootNamespace": "",
     "references": [
-        "TSKT.Localization"
+        "GUID:731fe47effa1b8d4aabe7208cce3b2da"
     ],
     "includePlatforms": [
         "Editor"
@@ -12,5 +13,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }

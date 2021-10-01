@@ -1,8 +1,9 @@
 {
     "name": "TSKT.Localization",
+    "rootNamespace": "",
     "references": [
-        "TSKTContainer",
-        "UniRx"
+        "GUID:f09ae09e65b1a3c42b7b618a95d1df6c",
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
