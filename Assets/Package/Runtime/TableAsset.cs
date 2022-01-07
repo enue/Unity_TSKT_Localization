@@ -67,10 +67,10 @@ namespace TSKT.Localizations
                         && languages[0].words[index] != null)
                     {
                         var word = languages[0].words[index]
-                            .Replace("\r", null)
-                            .Replace("\n", "<br/>")
                             .Replace("<", "&lt;")
-                            .Replace(">", "&gt;");
+                            .Replace(">", "&gt;")
+                            .Replace("\r", null)
+                            .Replace("\n", "<br/>");
                         builder.AppendLine("        /// <summary>");
                         builder.AppendLine("        /// " + word);
                         builder.AppendLine("        /// </summary>");
