@@ -131,3 +131,20 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.ide.vscode from version 1.2.3 to 1.2.4
+
+=== Tue Nov  2 08:57:05 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.scriptablebuildpipeline from version 1.19.0 to 1.19.2
+
+=== Fri Jan  7 18:05:14 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.visualstudio from version 2.0.11 to 2.0.12
+  com.unity.scriptablebuildpipeline from version 1.19.2 to 1.19.3
