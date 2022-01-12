@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: LocalizationSetting
   m_EditorClassIdentifier: 
   languages: 160000000a000000
+  replacerRegex: '[.*?]'

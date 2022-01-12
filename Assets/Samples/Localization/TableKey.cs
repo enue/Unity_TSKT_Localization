@@ -20,6 +20,11 @@ namespace TSKT
         /// <summary>
         /// いま{hour}時{minute}分です
         /// </summary>
-        public static LocalizationKey Piyo => new LocalizationKey(TableKey.Piyo);
+        public static LocalizationKey Piyo(LocalizationKey hour, LocalizationKey minute)
+        {
+            return new LocalizationKey(TableKey.Piyo)
+                .Replace("{hour}", hour)
+                .Replace("{minute}", minute)
+;        }
     }
 }

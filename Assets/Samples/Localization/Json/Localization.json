@@ -31,11 +31,11 @@
             "pairs": [
                 {
                     "language": "Japanese",
-                    "text": "いま{hour}時{minute}分です"
+                    "text": "いま[hour]時[minute]分です"
                 },
                 {
                     "language": "English",
-                    "text": "It's {hour}:{minute} now"
+                    "text": "It's [hour]:[minute] now"
                 }
             ]
         }

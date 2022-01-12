@@ -25,7 +25,7 @@ namespace TSKT.Localizations
 
 #if UNITY_EDITOR
 
-        public string  GenerateCode()
+        public string  GenerateCode(System.Text.RegularExpressions.Regex replacerRegex)
         {
             var builder = new System.Text.StringBuilder();
             builder.AppendLine("namespace TSKT");
@@ -57,16 +57,23 @@ namespace TSKT.Localizations
                 builder.AppendLine("    public static class AutoLocalizationKey");
                 builder.AppendLine("    {");
 
-                var index = 0;
-                foreach (var identifier in identifiers)
+                foreach (var (identifier, index) in identifiers.Select((_, i) => (_, i)))
                 {
+                    string[]? replacers;
+
                     if (languages != null
                         && languages.Length > 0
                         && languages[0].words != null
                         && languages[0].words.Length > index
                         && languages[0].words[index] != null)
                     {
-                        var word = languages[0].words[index]
+                        var word = languages[0].words[index];
+
+                        replacers = replacerRegex.Matches(word)
+                            .Select(_ => _.Value)
+                            .ToArray();
+
+                        word = word
                             .Replace("<", "&lt;")
                             .Replace(">", "&gt;")
                             .Replace("\r", null)
@@ -75,9 +82,32 @@ namespace TSKT.Localizations
                         builder.AppendLine("        /// " + word);
                         builder.AppendLine("        /// </summary>");
                     }
+                    else
+                    {
+                        replacers = null;
+                    }
 
-                    builder.AppendLine("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
-                    ++index;
+                    if (replacers == null || replacers.Length == 0)
+                    {
+                        builder.AppendLine("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
+                    }
+                    else
+                    {
+                        var args = replacers
+                            .Select(_ => _[1..^1])
+                            .ToArray();
+                        var argString = string.Join(", ", args.Select(_ => "LocalizationKey " + _));
+
+                        builder.AppendLine("        public static LocalizationKey " + identifier + "(" + argString + ")");
+                        builder.AppendLine("        {");
+                        builder.AppendLine("            return new LocalizationKey(TableKey." + identifier + ")");
+                        foreach (var (replacer, arg) in replacers.Zip(args, (replacer, arg) => (replacer, arg)))
+                        {
+                            builder.AppendLine("                .Replace(\"" + replacer + "\", " + arg + ")");
+                        }
+                        builder.Append(";");
+                        builder.AppendLine("        }");
+                    }
                 }
                 builder.AppendLine("    }");
             }

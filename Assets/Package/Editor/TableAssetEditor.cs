@@ -18,12 +18,7 @@ namespace TSKT.Localizations
                 {
                     var obj = (TableAsset)target;
 
-                    var setting = AssetDatabase.FindAssets("t:LocalizationSetting")
-                        .Select(AssetDatabase.GUIDToAssetPath)
-                        .Select(AssetDatabase.LoadAssetAtPath<LocalizationSetting>)
-                        .DefaultIfEmpty(null)
-                        .FirstOrDefault();
-
+                    var setting = LocalizationSetting.Instance;
                     Debug.Assert(setting, "not found LocalizationSetting");
 
                     if (setting)
@@ -40,7 +35,7 @@ namespace TSKT.Localizations
                 if (!string.IsNullOrEmpty(filename))
                 {
                     var obj = (TableAsset)target;
-                    var code = obj.GenerateCode();
+                    var code = obj.GenerateCode(LocalizationSetting.Instance.ReplacerRegex);
 
                     File.WriteAllText(filename, code);
                 }
