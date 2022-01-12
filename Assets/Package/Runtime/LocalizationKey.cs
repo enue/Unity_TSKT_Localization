@@ -16,7 +16,7 @@ namespace TSKT
         readonly int? index;
         readonly System.Func<SystemLanguage, string>? factory;
 
-        public static implicit operator LocalizationKey(string rawString)
+        public static explicit operator LocalizationKey(string rawString)
         {
             return CreateRaw(rawString);
         }
