@@ -13,17 +13,20 @@ MonoBehaviour:
   m_Name: TableAsset
   m_EditorClassIdentifier: 
   sortedKeys:
+  - Foo
   - Fuga
   - Hoge
   - Piyo
   languages:
   - code: 22
     words:
+    - "\u3044\u307E{hour}"
     - "\u793C\u5100\u304C\u4EBA\u3092\u4F5C\u308B"
     - "\u9244\u306F\u71B1\u3044\u3046\u3061\u306B\u6253\u3066"
     - "\u3044\u307E{hour}\u6642{minute}\u5206\u3067\u3059"
   - code: 10
     words:
+    - It's {hour} now
     - Manners make the man
     - Strike while the iron is hot
     - It's {hour}:{minute} now

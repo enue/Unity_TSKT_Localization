@@ -101,11 +101,18 @@ namespace TSKT.Localizations
                         builder.AppendLine("        public static LocalizationKey " + identifier + "(" + argString + ")");
                         builder.AppendLine("        {");
                         builder.AppendLine("            return new LocalizationKey(TableKey." + identifier + ")");
-                        foreach (var (replacer, arg) in replacers.Zip(args, (replacer, arg) => (replacer, arg)))
+
+                        if (replacers.Length == 1)
                         {
-                            builder.AppendLine("                .Replace(\"" + replacer + "\", " + arg + ")");
+                            builder.AppendLine("                .Replace(\"" + replacers[0] + "\", " + args[0] + ");");
                         }
-                        builder.Append(";");
+                        else
+                        {
+                            var replacerStrings = replacers.Zip(args, (replacer, arg) => (replacer, arg))
+                                .Select(_ => "(\"" + _.replacer + "\", " + _.arg + ")");
+                            var replacerString = string.Join(", ", replacerStrings);
+                            builder.AppendLine("                .Replace(" + replacerString + ");");
+                        }
                         builder.AppendLine("        }");
                     }
                 }
