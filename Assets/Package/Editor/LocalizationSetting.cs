@@ -22,7 +22,7 @@ namespace TSKT
         public SystemLanguage[] Languages => languages;
 
         [SerializeField]
-        string replacerRegex = "[.*?]";
+        string replacerRegex = "{[^:.-]*?}";
         public System.Text.RegularExpressions.Regex ReplacerRegex => new System.Text.RegularExpressions.Regex(replacerRegex);
 
         public static LocalizationSetting? Instance => AssetDatabase.FindAssets("t:LocalizationSetting")
