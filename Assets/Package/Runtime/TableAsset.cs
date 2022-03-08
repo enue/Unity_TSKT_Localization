@@ -99,7 +99,7 @@ namespace TSKT.Localizations
 
                         string argString;
                         bool singleIntReplacer;
-                        if (args.Length == 1 && args[0] == "{int}")
+                        if (args.Length == 1 && args[0] == "{i}")
                         {
                             argString = string.Join(", ", args.Select(_ => "int " + _));
                             singleIntReplacer = true;
