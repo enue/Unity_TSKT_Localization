@@ -96,22 +96,38 @@ namespace TSKT.Localizations
                         var args = replacers
                             .Select(_ => _[1..^1])
                             .ToArray();
-                        var argString = string.Join(", ", args.Select(_ => "LocalizationKey " + _));
 
-                        builder.AppendLine("        public static LocalizationKey " + identifier + "(" + argString + ")");
+                        string argString;
+                        bool singleIntReplacer;
+                        if (args.Length == 1 && args[0] == "{i}")
+                        {
+                            argString = string.Join(", ", args.Select(_ => "int " + _));
+                            singleIntReplacer = true;
+                        }
+                        else
+                        {
+                            argString = string.Join(", ", args.Select(_ => "LocalizationKey " + _));
+                            singleIntReplacer= false;
+                        }
+
+                        builder.AppendLine($"        public static LocalizationKey {identifier}({argString})");
                         builder.AppendLine("        {");
-                        builder.AppendLine("            return new LocalizationKey(TableKey." + identifier + ")");
+                        builder.AppendLine($"            return new LocalizationKey(TableKey.{identifier})");
 
-                        if (replacers.Length == 1)
+                        if (singleIntReplacer)
+                        {
+                            builder.AppendLine("                .Replace(\"" + replacers[0] + "\", " + args[0] + ".ToString());");
+                        }
+                        else if (replacers.Length == 1)
                         {
                             builder.AppendLine("                .Replace(\"" + replacers[0] + "\", " + args[0] + ");");
                         }
                         else
                         {
                             var replacerStrings = replacers.Zip(args, (replacer, arg) => (replacer, arg))
-                                .Select(_ => "(\"" + _.replacer + "\", " + _.arg + ")");
+                                .Select(_ => $"(\"{_.replacer}\", {_.arg})");
                             var replacerString = string.Join(", ", replacerStrings);
-                            builder.AppendLine("                .Replace(" + replacerString + ");");
+                            builder.AppendLine($"                .Replace({replacerString});");
                         }
                         builder.AppendLine("        }");
                     }
