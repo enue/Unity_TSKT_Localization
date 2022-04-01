@@ -116,9 +116,13 @@ namespace TSKT
             });
         }
 
-        readonly public LocalizationKey Replace(string key, LocalizationKey value)
+        public readonly LocalizationKey Replace(string key, LocalizationKey value)
         {
-            if (Fixed)
+            if (value.Fixed)
+            {
+                return Replace(key, value.Localize());
+            }
+            else if (Fixed)
             {
                 var origin = Localize();
                 if (value.Fixed)
@@ -235,7 +239,7 @@ namespace TSKT
                 });
             }
         }
-        readonly public LocalizationKey Concat(params LocalizationKey[] values)
+        public readonly LocalizationKey Concat(params LocalizationKey[] values)
         {
             var items = new List<LocalizationKey>();
             items.Add(this);
@@ -337,7 +341,7 @@ namespace TSKT
             return Localize(Localization.CurrentLanguage);
         }
 
-        readonly public string Localize(SystemLanguage language)
+        public readonly string Localize(SystemLanguage language)
         {
             if (factory != null)
             {
