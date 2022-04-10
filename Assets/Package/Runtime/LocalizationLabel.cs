@@ -23,7 +23,7 @@ namespace TSKT.Localizations
         void Start()
         {
             Localization.currentLanguage
-                .SubscribeWithState2(key, Text, (_lang, _key, _text) => _text.text = Localization.Get(_key))
+                .SubscribeWithState2(key, Text, (_lang, _key, _text) => _text.text = Localization.Get(_lang, _key))
                 .AddTo(Text);
         }
 #else
