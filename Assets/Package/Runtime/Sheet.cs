@@ -108,7 +108,7 @@ namespace TSKT.Localizations
                 var i = System.Array.IndexOf(sortedKeys, key);
 
                 Debug.Assert(language.words[i] == null, "duplicated key : " + languageCode + ", " + key);
-                language.words[i] = word;
+                language.words[i] = System.Text.RegularExpressions.Regex.Unescape(word);
             }
 
             return new Table(sortedKeys, langs.ToArray());
