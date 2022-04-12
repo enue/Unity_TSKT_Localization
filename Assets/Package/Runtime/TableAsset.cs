@@ -78,6 +78,15 @@ namespace TSKT.Localizations
                             .Replace(">", "&gt;")
                             .Replace("\r", null)
                             .Replace("\n", "<br/>");
+
+                        // https://github.com/google/material-design-icons/issues/813#issuecomment-401601344
+                        foreach (var it in word)
+                        {
+                            if (it >= 0xe000 && it <= 0xf000)
+                            {
+                                word = word.Replace(it.ToString(), @"\u" + ((int)it).ToString("X"));
+                            }
+                        }
                         builder.AppendLine("        /// <summary>");
                         builder.AppendLine("        /// " + word);
                         builder.AppendLine("        /// </summary>");
