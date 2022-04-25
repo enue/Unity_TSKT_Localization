@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
 using UniRx;
-#endif
 
 namespace TSKT
 {
@@ -21,7 +19,6 @@ namespace TSKT
         [SerializeField]
         int[] fontSizes = default!;
 
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
         void Start()
         {
             Localization.currentLanguage.SubscribeWithState((text: Text, initialFontSize: Text.fontSize, fontSizes, languages), (_, _state) =>
@@ -36,29 +33,6 @@ namespace TSKT
                     _state.text.fontSize = _state.initialFontSize;
                 }
             }).AddTo(Text);
-
         }
-#else
-        int initialFontSize;
-
-        void Start()
-        {
-            initialFontSize = Text.fontSize;
-            Refresh();
-        }
-
-        public void Refresh()
-        {
-            var index = System.Array.IndexOf(languages, Localization.CurrentLanguage);
-            if (index >= 0)
-            {
-                Text.fontSize = fontSizes[index];
-            }
-            else
-            {
-                Text.fontSize = initialFontSize;
-            }
-        }
-#endif
     }
 }
