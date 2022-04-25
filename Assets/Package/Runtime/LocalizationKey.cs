@@ -395,6 +395,26 @@ namespace TSKT
         }
 
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
+        readonly public System.IObservable<string> Replace(params (string key, System.IObservable<string> value)[] args)
+        {
+            var list = new List<System.IObservable<string>>();
+            list.Add(ToReadOnlyReactiveProperty());
+            foreach (var it in args)
+            {
+                list.Add(it.value);
+            }
+            return Observable.CombineLatest(list)
+                .Select(_ =>
+                {
+                    var result = _[0];
+                    foreach(var it in _.Skip(1).Zip(args, (value, arg) => (value, arg.key)))
+                    {
+                        result = result.Replace(it.key, it.value);
+                    }
+                    return result;
+                });
+        }
+
         public ReadOnlyReactiveProperty<string> ToReadOnlyReactiveProperty()
         {
             if (Fixed)
