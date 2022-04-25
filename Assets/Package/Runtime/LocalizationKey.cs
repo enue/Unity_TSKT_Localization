@@ -395,26 +395,6 @@ namespace TSKT
         }
 
 #if TSKT_LOCALIZATION_SUPPORT_UNIRX
-        public LocalizationKey(System.IObservable<string> value)
-        {
-            var property = value.ToReadOnlyReactiveProperty();
-            rawString = null;
-            index = null;
-
-            key = null;
-            factory = _ => property.Value;
-        }
-        public System.IObservable<string> ToObservable()
-        {
-            if (Fixed)
-            {
-                return new ReactiveProperty<string>(Localize()).ToReadOnlyReactiveProperty();
-            }
-
-            var clone = this;
-            return Localization.currentLanguage
-                .Select(_ => clone.Localize(_));
-        }
         public ReadOnlyReactiveProperty<string> ToReadOnlyReactiveProperty()
         {
             if (Fixed)
