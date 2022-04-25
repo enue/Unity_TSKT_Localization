@@ -42,7 +42,7 @@ namespace TSKT
             label.text = Localization.Get(TableKey.Fuga);
 
             var now = System.DateTime.Now;
-            var key = new LocalizationKey("Piyo",
+            var key = new LocalizationKey("Piyo").Replace(
                 ("{hour}", LocalizationKey.CreateRaw(now.Hour.ToString())),
                 ("{minute}", LocalizationKey.CreateRaw(now.Minute.ToString())));
             timeLabel.text = key.Localize();

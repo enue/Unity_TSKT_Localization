@@ -86,10 +86,5 @@ namespace TSKT
         {
             return ToLocalizationKey().Localize();
         }
-
-        public string ToString(SystemLanguage lang)
-        {
-            return ToLocalizationKey().Localize(lang);
-        }
     }
 }

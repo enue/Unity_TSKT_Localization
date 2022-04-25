@@ -3,18 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
 using UniRx;
-#endif
 
 namespace TSKT
 {
     public readonly struct LocalizationKey
     {
-        readonly string? rawString;
-        readonly string? key;
-        readonly int? index;
-        readonly System.Func<SystemLanguage, string>? factory;
+        readonly string? fixedValue;
+        readonly IReadOnlyReactiveProperty<string>? reactive;
 
         public static explicit operator LocalizationKey(string rawString)
         {
@@ -22,74 +18,41 @@ namespace TSKT
         }
         static public LocalizationKey CreateRaw(string rawString)
         {
-            return new LocalizationKey(
-                rawString: rawString,
-                rawKey: null,
-                index: null,
-                func: null);
+            return new LocalizationKey(rawString, reactive: null);
         }
 
-        LocalizationKey(string? rawString, string? rawKey, int? index, System.Func<SystemLanguage, string>? func)
+        LocalizationKey(string? fixeValue, ReadOnlyReactiveProperty<string>? reactive)
         {
-            this.rawString = rawString;
-            key = rawKey;
-            this.index = index;
-            factory = func;
+            fixedValue = fixeValue;
+            this.reactive = reactive;
         }
 
-        LocalizationKey(System.Func<SystemLanguage, string> factory)
+        public LocalizationKey(System.IObservable<string> reactive)
         {
-            rawString = null;
-            index = null;
-
-            key = null;
-            this.factory = factory;
+            fixedValue = null;
+            this.reactive = reactive.ToReadOnlyReactiveProperty();
         }
-
         public LocalizationKey(string key)
         {
-            rawString = null;
-            index = null;
-
-            this.key = key;
-            factory = null;
-        }
-
-        public LocalizationKey(string key, params (string key, LocalizationKey value)[] args)
-        {
-            this = new LocalizationKey(key).Replace(args);
+            fixedValue = null;
+            reactive = Localization.currentLanguage.Select(_ => Localization.Get(key)).ToReadOnlyReactiveProperty()!;
         }
 
         public LocalizationKey(int index)
         {
-            rawString = null;
-            key = null;
-
-            this.index = index;
-            factory = null;
-        }
-
-        public LocalizationKey(int index, params (string key, LocalizationKey value)[] args)
-        {
-            this = new LocalizationKey(index).Replace(args);
+            fixedValue = null;
+            reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty()!;
         }
 
         readonly public LocalizationKey Replace(string key, string value)
         {
             if (Fixed)
             {
-                var text = Localize();
-                text = text.Replace(key, value);
+                var text = Localize().Replace(key, value);
                 return CreateRaw(text);
             }
 
-            var origin = this;
-            return new LocalizationKey(factory: _ =>
-            {
-                var result = origin.Localize(_)!;
-                result = result.Replace(key, value);
-                return result!;
-            });
+            return new LocalizationKey(reactive.Select(_ => _.Replace(key, value)));
         }
 
         readonly public LocalizationKey Replace(params (string key, string value)[] args)
@@ -104,16 +67,16 @@ namespace TSKT
                 return CreateRaw(text);
             }
 
-            var origin = this;
-            return new LocalizationKey(factory: _ =>
-            {
-                var result = origin.Localize(_)!;
-                foreach (var it in args)
+            var observable = reactive
+                .Select(_ =>
                 {
-                    result = result.Replace(it.key, it.value);
-                }
-                return result;
-            });
+                    foreach (var it in args)
+                    {
+                        _ = _.Replace(it.key, it.value);
+                    }
+                    return _;
+                });
+            return new LocalizationKey(observable);
         }
 
         public readonly LocalizationKey Replace(string key, LocalizationKey value)
@@ -125,28 +88,16 @@ namespace TSKT
             else if (Fixed)
             {
                 var origin = Localize();
-                if (value.Fixed)
-                {
-                    origin = origin.Replace(key, value.Localize());
-                    return CreateRaw(origin);
-                }
-
-                return new LocalizationKey(factory: _ =>
-                {
-                    var result = origin;
-                    result = result.Replace(key, value.Localize(_));
-                    return result;
-                });
+                var observable = value.reactive.Select(_ => origin.Replace(key, _));
+                return new LocalizationKey(observable);
             }
             else
             {
-                var origin = this;
-                return new LocalizationKey(factory: _ =>
+                var observable = reactive.CombineLatest(value.reactive, (_a, _b) =>
                 {
-                    var result = origin.Localize(_)!;
-                    result = result.Replace(key, value.Localize(_));
-                    return result;
+                    return _a.Replace(key, _b);
                 });
+                return new LocalizationKey(observable);
             }
         }
 
@@ -183,28 +134,39 @@ namespace TSKT
                     replacers = args.Skip(fixedCount).ToArray();
                 }
 
-                return new LocalizationKey(factory: _ =>
+                var observable = Observable.CombineLatest(replacers.Select(_=>_.value.ToReadOnlyReactiveProperty()))
+                    .Select(_ =>
                 {
                     var result = origin;
-                    foreach (var it in replacers)
+                    foreach (var it in _.Select((_value, _index) => (_value, _index)))
                     {
-                        result = result.Replace(it.key, it.value.Localize(_));
+                        result = result.Replace(replacers[it._index].key, it._value);
                     }
                     return result;
                 });
+                return new LocalizationKey(observable);
             }
             else
             {
-                var origin = this;
-                return new LocalizationKey(factory: _ =>
+                var replacers = args;
+                var properties = new List<System.IObservable<string>>(replacers.Length + 1)
                 {
-                    var result = origin.Localize(_)!;
-                    foreach (var it in args)
+                    ToReadOnlyReactiveProperty()
+                };
+                foreach (var it in replacers)
+                {
+                    properties.Add(it.value.ToReadOnlyReactiveProperty());
+                }
+                var observable = Observable.CombineLatest(properties).Select(_ =>
+                {
+                    var result = _[0];
+                    foreach (var it in _.Skip(1).Select((_value, _index) => (_value, _index)))
                     {
-                        result = result.Replace(it.key, it.value.Localize(_));
+                        result = result.Replace(replacers[it._index].key, it._value);
                     }
                     return result;
                 });
+                return new LocalizationKey(observable);
             }
         }
         readonly public LocalizationKey Concat(LocalizationKey right)
@@ -216,27 +178,19 @@ namespace TSKT
             else if (Fixed)
             {
                 var left = Localize();
-                return new LocalizationKey(factory: _ =>
-                {
-                    return left + right.Localize(_);
-                });
+                var observable = right.reactive.Select(_ => left + _);
+                return new LocalizationKey(observable);
             }
             else if (right.Fixed)
             {
-                var left = this;
                 var _right = right.Localize();
-                return new LocalizationKey(factory: _ =>
-                {
-                    return left.Localize(_) + _right;
-                });
+                var observable = reactive.Select(_ => _ + _right);
+                return new LocalizationKey(observable);
             }
             else
             {
-                var left = this;
-                return new LocalizationKey(factory: _ =>
-                {
-                    return left.Localize(_) + right.Localize(_);
-                });
+                var observable = ToReadOnlyReactiveProperty().CombineLatest(right.ToReadOnlyReactiveProperty(), (_left, _right) => _left + _right);
+                return new LocalizationKey(observable);
             }
         }
         public readonly LocalizationKey Concat(params LocalizationKey[] values)
@@ -248,10 +202,10 @@ namespace TSKT
             {
                 if (it.Fixed)
                 {
-                    var last = items[items.Count - 1];
+                    var last = items[^1];
                     if (last.Fixed)
                     {
-                        items[items.Count - 1] = last.Concat(it);
+                        items[^1] = last.Concat(it);
                     }
                     else
                     {
@@ -269,54 +223,17 @@ namespace TSKT
                 return items[0];
             }
 
-            return new LocalizationKey(factory: lang =>
-            {
-                var builder = new System.Text.StringBuilder();
-                foreach (var it in items)
+            var observable = Observable.CombineLatest(items.Select(_ => _.ToReadOnlyReactiveProperty()))
+                .Select(_ =>
                 {
-                    builder.Append(it.Localize(lang));
-                }
-                return builder.ToString();
-            });
-        }
-
-        readonly public LocalizationKey Select(System.Func<SystemLanguage, string, string> selector)
-        {
-            if (Fixed)
-            {
-                var origin = Localize();
-                return new LocalizationKey(_language =>
-                {
-                    return selector(_language, origin);
+                    var builder = new System.Text.StringBuilder();
+                    foreach (var it in _)
+                    {
+                        builder.Append(_);
+                    }
+                    return builder.ToString();
                 });
-            }
-            else
-            {
-                var origin = this;
-                return new LocalizationKey(_language =>
-                {
-                    var s = origin.Localize(_language);
-                    return selector(_language, s);
-                });
-            }
-        }
-        readonly public LocalizationKey Select(System.Func<string, string> selector)
-        {
-            if (Fixed)
-            {
-                var origin = Localize();
-                var result = selector(origin);
-                return CreateRaw(result);
-            }
-            else
-            {
-                var origin = this;
-                return new LocalizationKey(_language =>
-                {
-                    var s = origin.Localize(_language);
-                    return selector(s);
-                });
-            }
+            return new LocalizationKey(observable);
         }
 
         readonly public LocalizationKey Trim()
@@ -328,106 +245,34 @@ namespace TSKT
             }
             else
             {
-                var origin = this;
-                return new LocalizationKey(_language =>
-                {
-                    return origin.Localize(_language).Trim();
-                });
+                var observable = ToReadOnlyReactiveProperty().Select(_ => _.Trim());
+                return new LocalizationKey(observable);
             }
         }
 
         readonly public string Localize()
         {
-            return Localize(Localization.CurrentLanguage);
-        }
-
-        public readonly string Localize(SystemLanguage language)
-        {
-            if (factory != null)
-            {
-                return factory(language);
-            }
-            else if (rawString != null)
-            {
-                return rawString;
-            }
-            else if (key != null)
-            {
-                return Localization.Get(language, key);
-            }
-            else if (index.HasValue)
-            {
-                return Localization.Get(language, index.Value);
-            }
-            else
-            {
-                // empty
-                return "";
-            }
+            return reactive?.Value ?? fixedValue ?? "";
         }
 
         readonly public bool Empty
         {
             get
             {
-                return
-                    rawString == null
-                    && key == null
-                    && !index.HasValue
-                    && factory == null;
+                return reactive == null && string.IsNullOrEmpty(fixedValue);
             }
         }
 
-        public bool Fixed
+        public bool Fixed => reactive == null;
+
+        public IReadOnlyReactiveProperty<string> ToReadOnlyReactiveProperty()
         {
-            get
+            if (reactive != null)
             {
-                if (Empty)
-                {
-                    return true;
-                }
-                if (factory != null)
-                {
-                    return false;
-                }
-                return rawString != null;
+                return reactive;
             }
+            return new ReactiveProperty<string>(Localize());
         }
-
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
-        readonly public System.IObservable<string> Replace(params (string key, System.IObservable<string> value)[] args)
-        {
-            var list = new List<System.IObservable<string>>();
-            list.Add(ToReadOnlyReactiveProperty());
-            foreach (var it in args)
-            {
-                list.Add(it.value);
-            }
-            return Observable.CombineLatest(list)
-                .Select(_ =>
-                {
-                    var result = _[0];
-                    foreach(var it in _.Skip(1).Zip(args, (value, arg) => (value, arg.key)))
-                    {
-                        result = result.Replace(it.key, it.value);
-                    }
-                    return result;
-                });
-        }
-
-        public ReadOnlyReactiveProperty<string> ToReadOnlyReactiveProperty()
-        {
-            if (Fixed)
-            {
-                return new ReactiveProperty<string>(Localize()).ToReadOnlyReactiveProperty();
-            }
-
-            var clone = this;
-            return Localization.currentLanguage
-                .Select(_ => clone.Localize(_))
-                .ToReadOnlyReactiveProperty();
-        }
-#endif
 
         static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
         {

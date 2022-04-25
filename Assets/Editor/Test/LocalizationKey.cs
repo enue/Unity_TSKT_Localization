@@ -49,16 +49,6 @@ namespace TSKT.Tests
                 LocalizationKey.CreateRaw("piyo"));
             Assert.AreEqual("hoge, fuga, piyo", key.Localize());
         }
-
-        [Test]
-        public void Select()
-        {
-            var hoge = LocalizationKey.CreateRaw("hoge");
-            var hogepiyo = hoge.Select(_ => _ + "piyo");
-            Assert.AreEqual("hogepiyo", hogepiyo.Localize());
-            var fuga = hoge.Select((_lang, _) => _.Replace("hoge", "fuga"));
-            Assert.AreEqual("fuga", fuga.Localize());
-        }
     }
 }
 

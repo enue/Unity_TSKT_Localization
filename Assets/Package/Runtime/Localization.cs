@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TSKT.Localizations;
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
 using UniRx;
-#endif
 
 namespace TSKT
 {
@@ -26,21 +24,12 @@ namespace TSKT
 
         Table? table;
 
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
         public static readonly ReactiveProperty<SystemLanguage> currentLanguage = new ReactiveProperty<SystemLanguage>(default);
         static public SystemLanguage CurrentLanguage
         {
             get => currentLanguage.Value;
             set => currentLanguage.Value = value;
         }
-#else
-        SystemLanguage currentLanguage;
-        static public SystemLanguage CurrentLanguage
-        {
-            get => Instance.currentLanguage;
-            set => Instance.currentLanguage = value;
-        }
-#endif
 
         Localization()
         {
@@ -109,21 +98,6 @@ namespace TSKT
         {
             return instance?.table?.GetIndex(key) ?? -1;
         }
-
-#if !TSKT_LOCALIZATION_SUPPORT_UNIRX
-        public static void ForceRefresh()
-        {
-            foreach(var it in Object.FindObjectsOfType<LocalizationLabel>())
-            {
-                it.Refresh();
-            }
-
-            foreach (var it in Object.FindObjectsOfType<FontSelector>())
-            {
-                it.Refresh();
-            }
-    }
-#endif
 
         public static SystemLanguage[]? Languages => instance?.table?.Languages;
         public static bool Contains(SystemLanguage language)

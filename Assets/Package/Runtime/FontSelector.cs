@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
 using UniRx;
-#endif
 
 namespace TSKT
 {
@@ -21,7 +19,6 @@ namespace TSKT
         [SerializeField]
         Font?[] fonts = default!;
 
-#if TSKT_LOCALIZATION_SUPPORT_UNIRX
         void Start()
         {
             Localization.currentLanguage.SubscribeWithState((text: Text, initialFont: Text.font, fonts, languages), (_, _state) =>
@@ -38,27 +35,5 @@ namespace TSKT
             }).AddTo(Text);
 
         }
-#else
-        Font initialFont;
-
-        void Start()
-        {
-            initialFont = Text.font;
-            Refresh();
-        }
-
-        public void Refresh()
-        {
-            var index = System.Array.IndexOf(languages, Localization.CurrentLanguage);
-            if (index >= 0)
-            {
-                Text.font = fonts[index];
-            }
-            else
-            {
-                Text.font = initialFont;
-            }
-        }
-#endif
     }
 }
