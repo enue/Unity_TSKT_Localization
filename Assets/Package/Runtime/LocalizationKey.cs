@@ -229,7 +229,7 @@ namespace TSKT
                     var builder = new System.Text.StringBuilder();
                     foreach (var it in _)
                     {
-                        builder.Append(_);
+                        builder.Append(it);
                     }
                     return builder.ToString();
                 });
