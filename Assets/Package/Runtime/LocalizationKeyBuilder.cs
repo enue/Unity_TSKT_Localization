@@ -23,11 +23,11 @@ namespace TSKT
             }
             else if (key.Fixed)
             {
-                var last = items[items.Count - 1];
+                var last = items[^1];
                 if (last.Fixed)
                 {
                     last = last.Concat(key);
-                    items[items.Count - 1] = last;
+                    items[^1] = last;
                 }
                 else
                 {
