@@ -118,5 +118,16 @@ namespace TSKT
             }
             return fallback;
         }
+
+        public static string Ordinal(int value)
+        {
+            return (value % 10) switch
+            {
+                1 => $"{value}st",
+                2 => $"{value}nd",
+                3 => $"{value}rd",
+                _ => $"{value}th"
+            };
+        }
     }
 }
