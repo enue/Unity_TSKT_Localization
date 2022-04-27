@@ -45,7 +45,7 @@ namespace TSKT.Localizations
                 var index = 0;
                 foreach (var identifier in identifiers)
                 {
-                    builder.AppendLine("        public const int " + identifier + " = " + index.ToString() + ";");
+                    builder.AppendLine($"        public const int {identifier} = {index};");
                     ++index;
                 }
                 builder.AppendLine("    }");
@@ -84,11 +84,11 @@ namespace TSKT.Localizations
                         {
                             if (it >= 0xe000 && it <= 0xf000)
                             {
-                                word = word.Replace(it.ToString(), @"\u" + ((int)it).ToString("X"));
+                                word = word.Replace(it.ToString(), $"\\u{((int)it):X}");
                             }
                         }
                         builder.AppendLine("        /// <summary>");
-                        builder.AppendLine("        /// " + word);
+                        builder.AppendLine($"        /// {word}");
                         builder.AppendLine("        /// </summary>");
                     }
                     else
@@ -98,29 +98,29 @@ namespace TSKT.Localizations
 
                     if (replacers == null || replacers.Length == 0)
                     {
-                        builder.AppendLine("        public static LocalizationKey " + identifier + " => new LocalizationKey(TableKey." + identifier + ");");
+                        builder.AppendLine($"        public static LocalizationKey {"identifier"} => new LocalizationKey(TableKey.{identifier});");
                     }
                     else
                     {
                         var args = replacers
                             .Select(_ => _[1..^1])
                             .ToArray();
-                        var argString = string.Join(", ", args.Select(_ => "LocalizationKey " + _));
+                        var argString = string.Join(", ", args.Select(_ => $"LocalizationKey {_}"));
 
-                        builder.AppendLine("        public static LocalizationKey " + identifier + "(" + argString + ")");
-                        builder.AppendLine("        {");
-                        builder.AppendLine("            return new LocalizationKey(TableKey." + identifier + ")");
+                        builder.AppendLine($"        public static LocalizationKey {identifier}({argString})");
+                        builder.AppendLine( "        {");
+                        builder.AppendLine($"            return new LocalizationKey(TableKey.{identifier})");
 
                         if (replacers.Length == 1)
                         {
-                            builder.AppendLine("                .Replace(\"" + replacers[0] + "\", " + args[0] + ");");
+                            builder.AppendLine($"                .Replace(\"{replacers[0]}\", {args[0]});");
                         }
                         else
                         {
                             var replacerStrings = replacers.Zip(args, (replacer, arg) => (replacer, arg))
-                                .Select(_ => "(\"" + _.replacer + "\", " + _.arg + ")");
+                                .Select(_ => $"(\"{_.replacer}\", {_.arg})");
                             var replacerString = string.Join(", ", replacerStrings);
-                            builder.AppendLine("                .Replace(" + replacerString + ");");
+                            builder.AppendLine($"                .Replace({replacerString});");
                         }
                         builder.AppendLine("        }");
                     }
