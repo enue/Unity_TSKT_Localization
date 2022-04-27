@@ -98,7 +98,7 @@ namespace TSKT.Localizations
 
                     if (replacers == null || replacers.Length == 0)
                     {
-                        builder.AppendLine($"        public static LocalizationKey {"identifier"} => new LocalizationKey(TableKey.{identifier});");
+                        builder.AppendLine($"        public static LocalizationKey {identifier} => new LocalizationKey(TableKey.{identifier});");
                     }
                     else
                     {
