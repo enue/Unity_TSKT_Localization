@@ -35,7 +35,7 @@ namespace TSKT.Localizations
                 if (!string.IsNullOrEmpty(filename))
                 {
                     var obj = (TableAsset)target;
-                    var code = obj.GenerateCode(LocalizationSetting.Instance.ReplacerRegex);
+                    var code = obj.GenerateCode(LocalizationSetting.Instance.ReplacerRegex, LocalizationSetting.Instance.SmartReplace);
 
                     File.WriteAllText(filename, code);
                 }

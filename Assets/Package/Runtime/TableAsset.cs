@@ -25,7 +25,7 @@ namespace TSKT.Localizations
 
 #if UNITY_EDITOR
 
-        public string  GenerateCode(System.Text.RegularExpressions.Regex replacerRegex)
+        public string  GenerateCode(System.Text.RegularExpressions.Regex replacerRegex, bool smartReplace)
         {
             var builder = new System.Text.StringBuilder();
             builder.AppendLine("namespace TSKT");
@@ -111,7 +111,16 @@ namespace TSKT.Localizations
                         builder.AppendLine( "        {");
                         builder.AppendLine($"            return new LocalizationKey(TableKey.{identifier})");
 
-                        if (replacers.Length == 1)
+                        if (smartReplace)
+                        {
+                            builder.Append("                ");
+                            foreach (var it in replacers.Zip(args, (replacer, arg) => (replacer, arg)))
+                            {
+                                builder.Append($".SmartReplace(\"{it.replacer}\", {it.arg})");
+                            }
+                            builder.AppendLine(";");
+                        }
+                        else if (replacers.Length == 1)
                         {
                             builder.AppendLine($"                .Replace(\"{replacers[0]}\", {args[0]});");
                         }

@@ -25,6 +25,10 @@ namespace TSKT
         string replacerRegex = "{[^:.-]*?}";
         public System.Text.RegularExpressions.Regex ReplacerRegex => new System.Text.RegularExpressions.Regex(replacerRegex);
 
+        [SerializeField]
+        bool smartReplace = true;
+        public bool SmartReplace => smartReplace;
+
         public static LocalizationSetting? Instance => AssetDatabase.FindAssets("t:LocalizationSetting")
             .Select(AssetDatabase.GUIDToAssetPath)
             .Select(AssetDatabase.LoadAssetAtPath<LocalizationSetting>)
