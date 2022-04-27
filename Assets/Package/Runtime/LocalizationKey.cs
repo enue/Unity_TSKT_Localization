@@ -44,6 +44,51 @@ namespace TSKT
             reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty()!;
         }
 
+        public readonly LocalizationKey SmartReplace(string key, LocalizationKey value)
+        {
+            var observable = ToReadOnlyReactiveProperty().CombineLatest(value.ToReadOnlyReactiveProperty(), (origin, _value) =>
+            {
+                // {{key}:ordinal}
+                {
+                    var k = $"{{{key}:ordinal}}";
+                    if (origin.Contains(k))
+                    {
+                        return origin.Replace(k, Localization.ToOrdinal(_value));
+                    }
+                }
+                // {{key}:plural:an apple|_ apples}
+                {
+                    var word = $"{{{key}:plural:";
+                    var index = origin.IndexOf(word);
+                    if (index != -1)
+                    {
+                        var first = index + word.Length;
+                        var second = origin.IndexOf('|', first) + 1;
+                        if (second != 0)
+                        {
+                            var closing = origin.IndexOf('}', second + 1);
+                            if (closing != -1)
+                            {
+                                string newValue;
+                                if (_value == "1")
+                                {
+                                    newValue = origin.Substring(first, second - first - 1);
+                                }
+                                else
+                                {
+                                    newValue = origin.Substring(second, closing - second);
+                                }
+                                origin = origin.Remove(index, closing - index + 1);
+                                return origin.Insert(index, newValue.Replace("_", _value));
+                            }
+                        }
+                    }
+                }
+                return origin.Replace(key, _value);
+            });
+            return new LocalizationKey(observable);
+        }
+
         readonly public LocalizationKey Replace(string key, string value)
         {
             if (Fixed)

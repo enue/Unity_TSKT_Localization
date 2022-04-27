@@ -119,14 +119,16 @@ namespace TSKT
             return fallback;
         }
 
-        public static string Ordinal(int value)
+        public static string ToOrdinal(string value)
         {
-            return (value % 10) switch
+            var a = value.Length >= 2 ? value[^2] : '0';
+            var b = value.Length >= 1 ? value[^1] : '0';
+            return (a, b) switch
             {
-                1 => $"{value}st",
-                2 => $"{value}nd",
-                3 => $"{value}rd",
-                _ => $"{value}th"
+                (not '1', '1') => value + "st",
+                (not '1', '2') => value + "nd",
+                (not '1', '3') => value + "rd",
+                _ => value + "th",
             };
         }
     }
