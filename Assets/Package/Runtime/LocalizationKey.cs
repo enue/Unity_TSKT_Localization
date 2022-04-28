@@ -375,7 +375,7 @@ namespace TSKT
                 return;
             }
             ToReadOnlyReactiveProperty()
-                .Subscribe(_ => TextMeshProUtil.SetText(text, _))
+                .SubscribeWithState(text, (_, _text) => TextMeshProUtil.SetText(_text, _))
                 .AddTo(text);
         }
 #endif
