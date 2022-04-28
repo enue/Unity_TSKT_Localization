@@ -46,7 +46,32 @@ namespace TSKT
 
         public readonly LocalizationKey SmartReplace(string key, LocalizationKey value)
         {
-            var observable = ToReadOnlyReactiveProperty().CombineLatest(value.ToReadOnlyReactiveProperty(), (origin, _value) =>
+            if (Fixed && value.Fixed)
+            {
+                var text = DoReplace(Localize(), key, value.Localize());
+                return CreateRaw(text);
+            }
+            if (Fixed)
+            {
+                var origin = Localize();
+                var observable = value.ToReadOnlyReactiveProperty().Select(_ => DoReplace(origin, key, _));
+                return new LocalizationKey(observable);
+            }
+            if (value.Fixed)
+            {
+                var _value = value.Localize();
+                var observable = ToReadOnlyReactiveProperty().Select(_ => DoReplace(_, key, _value));
+                return new LocalizationKey(observable);
+            }
+            {
+                var observable = ToReadOnlyReactiveProperty()
+                    .CombineLatest(
+                        value.ToReadOnlyReactiveProperty(),
+                        (_origin, _value) => DoReplace(_origin, key, _value));
+                return new LocalizationKey(observable);
+            }
+
+            static string DoReplace(string origin, string key, string _value)
             {
                 // {{key}:ordinal}
                 {
@@ -85,8 +110,8 @@ namespace TSKT
                     }
                 }
                 return origin.Replace(key, _value);
-            });
-            return new LocalizationKey(observable);
+
+            }
         }
 
         readonly public LocalizationKey Replace(string key, string value)
