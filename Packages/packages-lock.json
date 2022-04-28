@@ -1,11 +1,51 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "9e2163616b9c527fa9461544e2bcc5f93fd12d83"
+    },
     "com.github.enue.tskt_container": {
       "version": "https://github.com/enue/Unity_TSKT_Container.git?path=Assets/Package",
       "depth": 0,
       "source": "git",
       "dependencies": {},
       "hash": "af137f27f807a79732ce4455e6cac0c764cefada"
+    },
+    "com.github.enue.tskt_math": {
+      "version": "https://github.com/enue/Unity_TSKT_Math.git?path=Assets/Package",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.github.enue.tskt_container": "0.5.3",
+        "com.unity.mathematics": "1.1.0"
+      },
+      "hash": "b482779bc85a22394ab47d08cea054c191415bab"
+    },
+    "com.github.enue.tskt_tween": {
+      "version": "https://github.com/enue/Unity_TSKT_Tween.git?path=Assets/Package",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.cysharp.unitask": "2.0.13",
+        "com.github.enue.tskt_container": "0.5.2",
+        "com.github.enue.tskt_math": "0.8.3"
+      },
+      "hash": "667584a55e8fffae76cf086e678dcd7efd2628f8"
+    },
+    "com.github.enue.tskt_ui": {
+      "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.cysharp.unitask": "2.0.13",
+        "com.github.enue.tskt_container": "0.5.2",
+        "com.github.enue.tskt_math": "0.8.3",
+        "com.github.enue.tskt_tween": "0.5.0"
+      },
+      "hash": "e4a63559ae8f910a5e7c52a96e643d9694bdd432"
     },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
@@ -42,6 +82,13 @@
     "com.unity.ide.vscode": {
       "version": "1.2.5",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.mathematics": {
+      "version": "1.2.6",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

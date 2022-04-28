@@ -20,46 +20,8 @@ namespace TSKT.Localizations
 
         void Start()
         {
-            Localization.currentLanguage
-                .SubscribeWithState2(key, Text, (_lang, _key, _text) => SetText(_text, Localization.Get(_lang, _key)))
-                .AddTo(Text);
-        }
-
-        static void SetText(TMPro.TMP_Text text, string? value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                text.SetText(value);
-                return;
-            }
-            var font = text.font;
-            if (font.HasCharacters(value, out _, searchFallbacks: true, tryAddCharacter: true))
-            {
-                text.SetText(value);
-            }
-            else
-            {
-                text.SetText(value);
-                if (font.atlasPopulationMode == TMPro.AtlasPopulationMode.Dynamic)
-                {
-                    font.ClearFontAssetData();
-                }
-                foreach (var it in font.fallbackFontAssetTable)
-                {
-                    if (it.atlasPopulationMode == TMPro.AtlasPopulationMode.Dynamic)
-                    {
-                        it.ClearFontAssetData();
-                    }
-                }
-                var targetTexts = Object.FindObjectsOfType<TMPro.TMP_Text>(includeInactive: true);
-                foreach (var it in targetTexts)
-                {
-                    if (it.font == font)
-                    {
-                        it.ForceMeshUpdate();
-                    }
-                }
-            }
+            var k = new LocalizationKey(key);
+            k.SubscribeToText(Text);
         }
     }
 }

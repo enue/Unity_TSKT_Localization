@@ -344,6 +344,41 @@ namespace TSKT
             return new ReactiveProperty<string>(Localize());
         }
 
+        public void SubscribeToText(UnityEngine.UI.Text text)
+        {
+            if (Fixed)
+            {
+                text.text = Localize();
+                return;
+            }
+            if (Localization.Languages?.Length == 1)
+            {
+                text.text = Localize();
+                return;
+            }
+            ToReadOnlyReactiveProperty()
+                .SubscribeToText(text)
+                .AddTo(text);
+        }
+
+#if TSKT_LOCALIZATION_SUPPORT_TEXTMESHPRO
+        public void SubscribeToText(TMPro.TMP_Text text)
+        {
+            if (Fixed)
+            {
+                TextMeshProUtil.SetText(text, Localize());
+                return;
+            }
+            if (Localization.Languages?.Length == 1)
+            {
+                TextMeshProUtil.SetText(text, Localize());
+                return;
+            }
+            ToReadOnlyReactiveProperty()
+                .Subscribe(_ => TextMeshProUtil.SetText(text, _))
+                .AddTo(text);
+        }
+#endif
         static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
         {
             var builder = new LocalizationKeyBuilder();
