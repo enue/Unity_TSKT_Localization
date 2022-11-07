@@ -155,11 +155,15 @@ namespace TSKT.Localizations
                 var jsonString = File.ReadAllText(path);
                 jsonStrings.Add(jsonString);
             }
-            return CreateFromJsonStrings(jsonStrings.Array);
+            return CreateFromJsonStrings(jsonStrings.writer.WrittenSpan);
         }
 #endif
 
-        static public Sheet CreateFromJsonStrings(params string[] jsonStrings)
+        public static Sheet CreateFromJsonStrings(params string[] jsonStrings)
+        {
+            return CreateFromJsonStrings(new System.ReadOnlySpan<string>(jsonStrings));
+        }
+        public static Sheet CreateFromJsonStrings(System.ReadOnlySpan<string> jsonStrings)
         {
             var mergedSheet = new Sheet();
 

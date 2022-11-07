@@ -12,7 +12,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "af137f27f807a79732ce4455e6cac0c764cefada"
+      "hash": "f65d52185e4ec609b72e30b9f36e499ace9a6cb4"
     },
     "com.github.enue.tskt_math": {
       "version": "https://github.com/enue/Unity_TSKT_Math.git?path=Assets/Package",
@@ -22,7 +22,7 @@
         "com.github.enue.tskt_container": "0.5.3",
         "com.unity.mathematics": "1.1.0"
       },
-      "hash": "b482779bc85a22394ab47d08cea054c191415bab"
+      "hash": "d1b883d02f9e77ec0e9b5019269e81580b3e8c0c"
     },
     "com.github.enue.tskt_tween": {
       "version": "https://github.com/enue/Unity_TSKT_Tween.git?path=Assets/Package",
@@ -45,7 +45,7 @@
         "com.github.enue.tskt_math": "0.8.3",
         "com.github.enue.tskt_tween": "0.5.0"
       },
-      "hash": "e4a63559ae8f910a5e7c52a96e643d9694bdd432"
+      "hash": "1b5606da4d0e757fccab659773c461d6fd9bfb51"
     },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
