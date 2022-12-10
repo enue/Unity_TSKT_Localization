@@ -239,6 +239,16 @@ namespace TSKT
                 return new LocalizationKey(observable);
             }
         }
+        public readonly LocalizationKey Replace(char oldChar, char newChar)
+        {
+            if (Fixed)
+            {
+                var text = Localize().Replace(oldChar, newChar);
+                return CreateRaw(text);
+            }
+
+            return new LocalizationKey(reactive.Select(_ => _.Replace(oldChar, newChar)));
+        }
         readonly public LocalizationKey Concat(LocalizationKey right)
         {
             if (Fixed && right.Fixed)
