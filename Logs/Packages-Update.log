@@ -170,3 +170,21 @@ The following packages were updated:
   com.unity.ide.visualstudio from version 2.0.15 to 2.0.16
   com.unity.scriptablebuildpipeline from version 1.19.6 to 1.20.1
   com.unity.test-framework from version 1.1.31 to 1.1.33
+
+=== Mon Nov 14 08:00:53 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 3.0.15 to 3.0.16
+
+=== Sat Dec 10 18:27:58 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.ai.navigation@1.1.1
+The following packages were updated:
+  com.unity.scriptablebuildpipeline from version 1.20.1 to 1.21.0
