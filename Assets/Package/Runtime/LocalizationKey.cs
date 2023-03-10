@@ -44,6 +44,11 @@ namespace TSKT
             reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty()!;
         }
 
+        public readonly LocalizationKey SmartReplace(string key, string value)
+        {
+            return SmartReplace(key, CreateRaw(value));
+        }
+
         public readonly LocalizationKey SmartReplace(string key, LocalizationKey value)
         {
             if (Fixed && value.Fixed)

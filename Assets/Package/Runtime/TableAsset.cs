@@ -108,7 +108,7 @@ namespace TSKT.Localizations
                         var argString = string.Join(", ", args.Select(_ => $"LocalizationKey {_}"));
 
                         builder.AppendLine($"        public static LocalizationKey {identifier}({argString})");
-                        builder.AppendLine( "        {");
+                        builder.AppendLine("        {");
                         builder.AppendLine($"            return new LocalizationKey(TableKey.{identifier})");
 
                         if (smartReplace)
@@ -132,6 +132,19 @@ namespace TSKT.Localizations
                             builder.AppendLine($"                .Replace({replacerString});");
                         }
                         builder.AppendLine("        }");
+
+                        if (smartReplace)
+                        {
+                            var _argString = string.Join(", ", args.Select(_ => $"string {_}"));
+
+                            builder.Append($"        public static LocalizationKey {identifier}({_argString})");
+                            builder.Append($" => new LocalizationKey(TableKey.{identifier})");
+                            foreach (var it in replacers.Zip(args, (replacer, arg) => (replacer, arg)))
+                            {
+                                builder.Append($".SmartReplace(\"{it.replacer}\", {it.arg})");
+                            }
+                            builder.AppendLine(";");
+                        }
                     }
                 }
                 builder.AppendLine("    }");
