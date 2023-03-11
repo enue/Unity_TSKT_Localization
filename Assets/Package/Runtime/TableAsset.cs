@@ -60,6 +60,7 @@ namespace TSKT.Localizations
                 foreach (var (identifier, index) in identifiers.Select((_, i) => (_, i)))
                 {
                     string[]? replacers;
+                    string? comment = null;
 
                     if (languages != null
                         && languages.Length > 0
@@ -87,13 +88,19 @@ namespace TSKT.Localizations
                                 word = word.Replace(it.ToString(), $"\\u{((int)it):X}");
                             }
                         }
-                        builder.AppendLine("        /// <summary>");
-                        builder.AppendLine($"        /// {word}");
-                        builder.AppendLine("        /// </summary>");
+                        comment = word;
                     }
                     else
                     {
                         replacers = null;
+                    }
+
+
+                    if (!string.IsNullOrEmpty(comment))
+                    {
+                        builder.AppendLine("        /// <summary>");
+                        builder.AppendLine($"        /// {comment}");
+                        builder.AppendLine("        /// </summary>");
                     }
 
                     if (replacers == null || replacers.Length == 0)
@@ -107,13 +114,11 @@ namespace TSKT.Localizations
                             .ToArray();
                         var argString = string.Join(", ", args.Select(_ => $"LocalizationKey {_}"));
 
-                        builder.AppendLine($"        public static LocalizationKey {identifier}({argString})");
-                        builder.AppendLine("        {");
-                        builder.AppendLine($"            return new LocalizationKey(TableKey.{identifier})");
+                        builder.Append($"        public static LocalizationKey {identifier}({argString})");
+                        builder.Append($" => new LocalizationKey(TableKey.{identifier})");
 
                         if (smartReplace)
                         {
-                            builder.Append("                ");
                             foreach (var it in replacers.Zip(args, (replacer, arg) => (replacer, arg)))
                             {
                                 builder.Append($".SmartReplace(\"{it.replacer}\", {it.arg})");
@@ -122,19 +127,24 @@ namespace TSKT.Localizations
                         }
                         else if (replacers.Length == 1)
                         {
-                            builder.AppendLine($"                .Replace(\"{replacers[0]}\", {args[0]});");
+                            builder.AppendLine($".Replace(\"{replacers[0]}\", {args[0]});");
                         }
                         else
                         {
                             var replacerStrings = replacers.Zip(args, (replacer, arg) => (replacer, arg))
                                 .Select(_ => $"(\"{_.replacer}\", {_.arg})");
                             var replacerString = string.Join(", ", replacerStrings);
-                            builder.AppendLine($"                .Replace({replacerString});");
+                            builder.AppendLine($".Replace({replacerString});");
                         }
-                        builder.AppendLine("        }");
 
                         if (smartReplace)
                         {
+                            if (!string.IsNullOrEmpty(comment))
+                            {
+                                builder.AppendLine("        /// <summary>");
+                                builder.AppendLine($"        /// {comment}");
+                                builder.AppendLine("        /// </summary>");
+                            }
                             var _argString = string.Join(", ", args.Select(_ => $"string {_}"));
 
                             builder.Append($"        public static LocalizationKey {identifier}({_argString})");
