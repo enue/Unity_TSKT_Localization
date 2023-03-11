@@ -188,3 +188,20 @@ The following packages were added:
   com.unity.ai.navigation@1.1.1
 The following packages were updated:
   com.unity.scriptablebuildpipeline from version 1.20.1 to 1.21.0
+
+=== Mon Feb 27 18:20:27 2023
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ide.rider from version 3.0.17 to 3.0.18
+  com.unity.scriptablebuildpipeline from version 1.21.0 to 1.21.1
+
+=== Sat Mar 11 08:27:14 2023
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.scriptablebuildpipeline from version 1.21.1 to 1.21.3
