@@ -35,14 +35,30 @@ namespace TSKT
         }
         public LocalizationKey(string key)
         {
-            fixedValue = null;
-            reactive = Localization.currentLanguage.Select(_ => Localization.Get(key)).ToReadOnlyReactiveProperty()!;
+            if (Localization.Languages?.Length == 1)
+            {
+                fixedValue = Localization.Get(key);
+                reactive = null;
+            }
+            else
+            {
+                fixedValue = null;
+                reactive = Localization.currentLanguage.Select(_ => Localization.Get(key)).ToReadOnlyReactiveProperty()!;
+            }
         }
 
         public LocalizationKey(int index)
         {
-            fixedValue = null;
-            reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty()!;
+            if (Localization.Languages?.Length == 1)
+            {
+                fixedValue = Localization.Get(index);
+                reactive = null;
+            }
+            else
+            {
+                fixedValue = null;
+                reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty()!;
+            }
         }
 
         public readonly LocalizationKey SmartReplace(string key, string value)
