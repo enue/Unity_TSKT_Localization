@@ -44,7 +44,7 @@
         "com.github.enue.tskt_math": "0.8.3",
         "com.github.enue.tskt_tween": "0.5.0"
       },
-      "hash": "72d73e317b04ce74d1f30752acdcf5308e01f0c4"
+      "hash": "a7d9762a2118f2ca650708b7ba35bc03154a92d6"
     },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",

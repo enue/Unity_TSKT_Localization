@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
+using UniRx;
 
 namespace TSKT.Tests
 {
@@ -22,6 +23,20 @@ namespace TSKT.Tests
             stringBuilder.AppendLine("fuga");
 
             Assert.AreEqual(stringBuilder.ToString(), builder.ToLocalizationKey().Localize());
+        }
+
+        [Test]
+        public void Combine()
+        {
+            var builder = new LocalizationKeyBuilder();
+            builder.Append(LocalizationKey.CreateRaw("a"));
+            var source = new ReactiveProperty<string>("b");
+            builder.Append(new LocalizationKey(source));
+            builder.Append(LocalizationKey.CreateRaw("c"));
+
+            Assert.AreEqual("abc", builder.ToString());
+            source.Value = "z";
+            Assert.AreEqual("azc", builder.ToString());
         }
     }
 }
