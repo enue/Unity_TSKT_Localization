@@ -373,9 +373,7 @@ namespace TSKT
             {
                 return reactive;
             }
-            var result = new ReactiveProperty<string>(Localize());
-            result.Dispose();
-            return result;
+            return new ReactiveProperty<string>(Localize());
         }
 
         public void SubscribeToText(UnityEngine.UI.Text text)
