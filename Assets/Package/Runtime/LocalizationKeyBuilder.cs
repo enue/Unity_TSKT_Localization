@@ -8,7 +8,7 @@ namespace TSKT
 {
     public class LocalizationKeyBuilder
     {
-        readonly List<LocalizationKey> items = new List<LocalizationKey>();
+        readonly List<LocalizationKey> items = new();
 
         public LocalizationKeyBuilder Append(LocalizationKey key)
         {

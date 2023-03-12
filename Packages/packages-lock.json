@@ -39,11 +39,12 @@
       "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.0.13",
+        "com.neuecc.unirx": "7.1.0",
         "com.github.enue.tskt_container": "0.5.2",
         "com.github.enue.tskt_math": "0.8.3",
         "com.github.enue.tskt_tween": "0.5.0"
       },
-      "hash": "20207af24c5747fac2dfe41ee3e3b02d50d911fb"
+      "hash": "72d73e317b04ce74d1f30752acdcf5308e01f0c4"
     },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",

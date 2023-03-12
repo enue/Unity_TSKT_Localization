@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
+using System;
 
 namespace TSKT
 {
@@ -371,9 +372,7 @@ namespace TSKT
                 text.text = Localize();
                 return;
             }
-            ToReadOnlyReactiveProperty()
-                .SubscribeToText(text)
-                .AddTo(text);
+            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
 
 #if TSKT_LOCALIZATION_SUPPORT_TEXTMESHPRO
@@ -389,9 +388,7 @@ namespace TSKT
                 TextMeshProUtil.SetText(text, Localize());
                 return;
             }
-            ToReadOnlyReactiveProperty()
-                .SubscribeWithState(text, (_, _text) => TextMeshProUtil.SetText(_text, _))
-                .AddTo(text);
+            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
 #endif
         static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
