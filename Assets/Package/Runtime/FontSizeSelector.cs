@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 namespace TSKT
 {
@@ -32,7 +33,7 @@ namespace TSKT
                 {
                     _state.text.fontSize = _state.initialFontSize;
                 }
-            }).AddTo(Text);
+            }).AddTo(Text.destroyCancellationToken);
         }
     }
 }
