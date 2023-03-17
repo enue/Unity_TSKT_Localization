@@ -7,6 +7,9 @@
     "keywords": [],
     "category": "",
     "dependencies": {
-        "com.github.enue.tskt_container": "0.5.2"
+        "com.github.enue.tskt_container": "0.5.2",
+        "com.github.enue.tskt_ui": "0.22.8",
+        "com.neuecc.unirx": "7.1.0",
+        "com.cysharp.unitask": "2.3.3"
     }
 }
