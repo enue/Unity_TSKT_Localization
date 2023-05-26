@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-#if TSKT_LOCALIZATION_SUPPORT_TEXTMESHPRO
 using UniRx;
 
 namespace TSKT.Localizations
@@ -25,4 +24,3 @@ namespace TSKT.Localizations
         }
     }
 }
-#endif

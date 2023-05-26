@@ -394,7 +394,6 @@ namespace TSKT
             TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
 
-#if TSKT_LOCALIZATION_SUPPORT_TEXTMESHPRO
         public void SubscribeToText(TMPro.TMP_Text text)
         {
             if (Fixed)
@@ -409,7 +408,6 @@ namespace TSKT
             }
             TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
-#endif
         static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
         {
             var builder = new LocalizationKeyBuilder();
