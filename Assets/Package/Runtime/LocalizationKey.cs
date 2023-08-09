@@ -398,12 +398,12 @@ namespace TSKT
         {
             if (Fixed)
             {
-                TextMeshProUtil.SetText(text, Localize());
+                text.text = Localize();
                 return;
             }
             if (Localization.Languages?.Length == 1)
             {
-                TextMeshProUtil.SetText(text, Localize());
+                text.text = Localize();
                 return;
             }
             TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());

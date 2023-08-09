@@ -31,7 +31,7 @@
         "com.cysharp.unitask": "2.3.3",
         "com.github.enue.tskt_math": "0.21.5"
       },
-      "hash": "fec2b8da6189ff2eb12edee473a3af5825ca3172"
+      "hash": "75bd747d355ca35f66c6c578d6977927899fb627"
     },
     "com.github.enue.tskt_ui": {
       "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package",
@@ -44,7 +44,7 @@
         "com.github.enue.tskt_math": "0.8.3",
         "com.github.enue.tskt_tween": "0.5.0"
       },
-      "hash": "a7d9762a2118f2ca650708b7ba35bc03154a92d6"
+      "hash": "4ee4471128c7a18ff8306a6e565c45fe88b3bc4a"
     },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",

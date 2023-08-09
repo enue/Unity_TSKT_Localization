@@ -122,10 +122,10 @@ namespace TSKT.Localizations
             return new Table(sortedKeys, langs.ToArray());
         }
 
-        static Sheet Create(DoubleDictionary<string, string, string> languageKeyTextDictionary)
+        static Sheet Create((string language, string key, string text)[] languageKeyTexts)
         {
             var result = new Sheet();
-            foreach(var (language, key, text) in languageKeyTextDictionary)
+            foreach(var (language, key, text) in languageKeyTexts)
             {
                 var item = result.items.FirstOrDefault(_ => _.key == key);
                 if (item == null)
@@ -156,14 +156,14 @@ namespace TSKT.Localizations
 
         static public Sheet CreateFromFiles(params string[] pathes)
         {
-            var jsonStrings = new ArrayBuilder<string>(pathes.Length);
+            var jsonStrings = new List<string>(pathes.Length);
             foreach (var path in pathes)
             {
                 Debug.Log(path);
                 var jsonString = File.ReadAllText(path);
                 jsonStrings.Add(jsonString);
             }
-            return CreateFromJsonStrings(jsonStrings.writer.WrittenSpan);
+            return CreateFromJsonStrings(jsonStrings.ToArray());
         }
 #endif
 
@@ -189,9 +189,9 @@ namespace TSKT.Localizations
             return mergedSheet;
         }
 
-        static public Sheet FromSpreadsheet(string[][] cells)
+        public static Sheet FromSpreadsheet(string[][] cells)
         {
-            var dict = new DoubleDictionary<string, string, string>();
+            var dict = new List<(string language, string key, string text)>();
 
             foreach (var row in cells.Skip(1))
             {
@@ -204,11 +204,11 @@ namespace TSKT.Localizations
                 {
                     var cell = row[i];
                     var lang = cells[0][i];
-                    dict.Add(lang, id, cell);
+                    dict.Add((lang, id, cell));
                 }
             }
 
-            return Create(dict);
+            return Create(dict.ToArray());
         }
     }
 }
