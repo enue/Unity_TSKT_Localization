@@ -60,10 +60,11 @@ namespace TSKT.Localizations
             }
         }
 
-        DoubleDictionary<SystemLanguage, string, string> CreateLanguageKeyTextDictionary(params SystemLanguage[] languages)
+        Dictionary<SystemLanguage, Dictionary<string, string>> CreateLanguageKeyTextDictionary(params SystemLanguage[] languages)
         {
             Debug.Assert(languages.Length > 0, "使う言語が何もしていされていません");
-            var languageKeyWords = new DoubleDictionary<SystemLanguage, string, string>();
+            var languageKeyWords = new Dictionary<SystemLanguage, Dictionary<string, string>>();
+
             foreach (var item in items)
             {
                 foreach (var pair in item.pairs)
@@ -74,7 +75,12 @@ namespace TSKT.Localizations
                         {
                             continue;
                         }
-                        languageKeyWords.Add(lang, item.key, pair.text);
+                        if (!languageKeyWords.TryGetValue(lang, out var dict))
+                        {
+                            dict =  new Dictionary<string, string>();
+                            languageKeyWords.Add(lang, dict);
+                        }
+                        dict.Add(item.key, pair.text);
                     }
                 }
             }
@@ -92,29 +98,31 @@ namespace TSKT.Localizations
 
             var langs = new List<Table.Language>();
 
-            foreach (var (languageCode, key, word) in CreateLanguageKeyTextDictionary(languages))
+            var languageKeyTexts = CreateLanguageKeyTextDictionary(languages);
+            foreach (var languageCode in languages)
             {
-                var language = langs.FirstOrDefault(_ => _.code == languageCode);
-                if (language == null)
+                var language = new Table.Language
                 {
-                    language = new Table.Language
+                    code = languageCode,
+                    words = new string[sortedKeys.Length]
+                };
+                langs.Add(language);
+                if (languageKeyTexts.TryGetValue(languageCode, out var dict))
+                {
+                    foreach (var it in dict)
                     {
-                        code = languageCode,
-                        words = new string[sortedKeys.Length]
-                    };
-                    langs.Add(language);
+                        var i = System.Array.IndexOf(sortedKeys, it.Key);
+
+                        Debug.Assert(language.words[i] == null, "duplicated key : " + languageCode + ", " + it.Key);
+                        language.words[i] = System.Text.RegularExpressions.Regex.Unescape(it.Value);
+                    }
                 }
-
-                var i = System.Array.IndexOf(sortedKeys, key);
-
-                Debug.Assert(language.words[i] == null, "duplicated key : " + languageCode + ", " + key);
-                language.words[i] = System.Text.RegularExpressions.Regex.Unescape(word);
             }
 
             return new Table(sortedKeys, langs.ToArray());
         }
 
-        public static Sheet Create(DoubleDictionary<string, string, string> languageKeyTextDictionary)
+        static Sheet Create(DoubleDictionary<string, string, string> languageKeyTextDictionary)
         {
             var result = new Sheet();
             foreach(var (language, key, text) in languageKeyTextDictionary)
