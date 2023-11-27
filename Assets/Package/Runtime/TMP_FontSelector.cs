@@ -12,29 +12,42 @@ namespace TSKT
     [RequireComponent(typeof(TMPro.TMP_Text))]
     public class TMP_FontSelector : MonoBehaviour
     {
+        [System.Serializable]
+        struct Style
+        {
+            public SystemLanguage language;
+
+            [SerializeField]
+            public TMP_FontAsset font;
+
+            [SerializeField]
+            public Material? material;
+        }
+
         TMPro.TMP_Text? text;
         TMPro.TMP_Text Text => text ? text! : (text = GetComponent<TMPro.TMP_Text>());
 
         [SerializeField]
-        SystemLanguage[] languages = default!;
-
-        [SerializeField]
-        TMP_FontAsset?[] fonts = default!;
+        Style[] styles = default!;
 
         void Start()
         {
-            Localization.currentLanguage.SubscribeWithState((text: Text, initialFont: Text.font, material: Text.fontMaterial, fonts, languages), (_, _state) =>
+            Localization.currentLanguage.SubscribeWithState((initialFont: Text.font, initialMaterial: Text.fontSharedMaterial), (_, _state) =>
             {
-                var index = System.Array.IndexOf(_state.languages, _);
+                var index = System.Array.FindIndex(styles, style => style.language == _);
                 if (index >= 0)
                 {
-                    _state.text.font = _state.fonts[index];
-                    _state.text.fontMaterial = _state.material;
+                    var style = styles[index];
+                    Text.font = style.font;
+                    if (style.material)
+                    {
+                        Text.fontMaterial = style.material;
+                    }
                 }
                 else
                 {
-                    _state.text.font = _state.initialFont;
-                    _state.text.fontMaterial = _state.material;
+                    Text.font = _state.initialFont;
+                    Text.fontMaterial = _state.initialMaterial;
                 }
             }).AddTo(Text.destroyCancellationToken);
 
