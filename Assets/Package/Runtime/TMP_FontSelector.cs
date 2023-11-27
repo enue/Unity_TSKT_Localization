@@ -23,16 +23,18 @@ namespace TSKT
 
         void Start()
         {
-            Localization.currentLanguage.SubscribeWithState((text: Text, initialFont: Text.font, fonts, languages), (_, _state) =>
+            Localization.currentLanguage.SubscribeWithState((text: Text, initialFont: Text.font, material: Text.fontMaterial, fonts, languages), (_, _state) =>
             {
                 var index = System.Array.IndexOf(_state.languages, _);
                 if (index >= 0)
                 {
                     _state.text.font = _state.fonts[index];
+                    _state.text.fontMaterial = _state.material;
                 }
                 else
                 {
                     _state.text.font = _state.initialFont;
+                    _state.text.fontMaterial = _state.material;
                 }
             }).AddTo(Text.destroyCancellationToken);
 
