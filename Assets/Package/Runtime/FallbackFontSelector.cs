@@ -21,12 +21,14 @@ namespace TSKT
         int destinationIndex;
 
         [SerializeField]
+        TMP_FontAsset defaultFont = default!;
+
+        [SerializeField]
         LanguageFontPair[] pairs = default!;
 
         void Start()
         {
-            var defaultFont = TMP_Settings.fallbackFontAssets[destinationIndex];
-            Localization.currentLanguage.SubscribeWithState(defaultFont, (language, _defaultFont) =>
+            Localization.currentLanguage.Subscribe(language =>
             {
                 var index = System.Array.FindIndex(pairs, _ => _.language == language);
 
@@ -36,7 +38,7 @@ namespace TSKT
                 }
                 else
                 {
-                    TMP_Settings.fallbackFontAssets[destinationIndex] = _defaultFont;
+                    TMP_Settings.fallbackFontAssets[destinationIndex] = defaultFont;
                 }
             }).AddTo(destroyCancellationToken);
         }
