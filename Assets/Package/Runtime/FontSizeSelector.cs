@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
+using R3;
 using Cysharp.Threading.Tasks;
 
 namespace TSKT
@@ -22,7 +22,7 @@ namespace TSKT
 
         void Start()
         {
-            Localization.currentLanguage.SubscribeWithState((text: Text, initialFontSize: Text.fontSize, fontSizes, languages), (_, _state) =>
+            Localization.currentLanguage.Subscribe((text: Text, initialFontSize: Text.fontSize, fontSizes, languages), (_, _state) =>
             {
                 var index = System.Array.IndexOf(_state.languages, _);
                 if (index >= 0)
@@ -33,7 +33,7 @@ namespace TSKT
                 {
                     _state.text.fontSize = _state.initialFontSize;
                 }
-            }).AddTo(Text.destroyCancellationToken);
+            }).AddTo(Text);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
+using R3;
 using TMPro;
 using Cysharp.Threading.Tasks;
 
@@ -40,7 +40,7 @@ namespace TSKT
                 {
                     TMP_Settings.fallbackFontAssets[destinationIndex] = defaultFont;
                 }
-            }).AddTo(destroyCancellationToken);
+            }).AddTo(this);
         }
     }
 }

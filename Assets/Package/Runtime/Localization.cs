@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TSKT.Localizations;
-using UniRx;
+using R3;
 
 namespace TSKT
 {
@@ -24,7 +24,7 @@ namespace TSKT
 
         Table? table;
 
-        public static readonly ReactiveProperty<SystemLanguage> currentLanguage = new ReactiveProperty<SystemLanguage>(default);
+        public static readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
         static public SystemLanguage CurrentLanguage
         {
             get => currentLanguage.Value;

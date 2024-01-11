@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
-using UniRx;
+using R3;
 
 namespace TSKT.Tests
 {
