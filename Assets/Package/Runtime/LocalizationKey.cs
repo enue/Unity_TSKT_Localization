@@ -43,7 +43,7 @@ namespace TSKT
             else
             {
                 fixedValue = null;
-                reactive = Localization.currentLanguage.Select(_ => Localization.Get(key)).ToReadOnlyReactiveProperty()!;
+                reactive = Localization.currentLanguage.Select(_ => Localization.Get(key)).ToReadOnlyReactiveProperty("");
             }
         }
 
@@ -57,7 +57,7 @@ namespace TSKT
             else
             {
                 fixedValue = null;
-                reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty()!;
+                reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty("");
             }
         }
 

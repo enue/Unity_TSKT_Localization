@@ -14,7 +14,7 @@ namespace TSKT
         Text timeLabel = default;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void Initialzie()
+        static void Initialize()
         {
             Localization.CurrentLanguage = SystemLanguage.Japanese;
             Localization.SetTable(Resources.Load<Localizations.TableAsset>("TableAsset").Table);

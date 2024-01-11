@@ -29,7 +29,7 @@ namespace TSKT.Localizations
             return System.Array.BinarySearch(sortedKeys, key, System.StringComparer.Ordinal);
         }
 
-        public string? Get(SystemLanguage language, string key)
+        public string Get(SystemLanguage language, string key)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -46,7 +46,7 @@ namespace TSKT.Localizations
             return Get(language, wordIndex);
         }
 
-        public string? Get(SystemLanguage language, int index)
+        public string Get(SystemLanguage language, int index)
         {
             foreach (var it in languages)
             {
@@ -56,7 +56,7 @@ namespace TSKT.Localizations
                 }
             }
             Debug.Assert(false, "not found lang : " + language);
-            return null;
+            return "";
         }
 
         public SystemLanguage[] Languages => languages.Select(_ => _.code).ToArray();
