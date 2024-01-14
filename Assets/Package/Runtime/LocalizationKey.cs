@@ -392,7 +392,7 @@ namespace TSKT
                 text.text = Localize();
                 return;
             }
-            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty().AsIObservable());
+            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
 
         public void SubscribeToText(TMPro.TMP_Text text)
@@ -407,7 +407,7 @@ namespace TSKT
                 text.text = Localize();
                 return;
             }
-            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty().AsIObservable());
+            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
         static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
         {

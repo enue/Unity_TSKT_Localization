@@ -48,24 +48,16 @@
       "hash": "75bd747d355ca35f66c6c578d6977927899fb627"
     },
     "com.github.enue.tskt_ui": {
-      "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package",
+      "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package#r3",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.4.1",
-        "com.neuecc.unirx": "7.1.0",
         "com.github.enue.tskt_container": "0.9.4",
         "com.github.enue.tskt_math": "0.21.5",
         "com.github.enue.tskt_tween": "0.6.5"
       },
-      "hash": "bde06cd78e70265f349887a1a84bb63b99e958b1"
-    },
-    "com.neuecc.unirx": {
-      "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "284d5c50d3f1ddd9fa7df3d382ea904732a9c2ff"
+      "hash": "c4ca3e56555862feb14218fd8ed267d9a3f055e2"
     },
     "com.unity.ai.navigation": {
       "version": "2.0.0",
