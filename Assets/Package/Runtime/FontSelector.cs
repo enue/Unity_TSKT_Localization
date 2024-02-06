@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using R3;
-using Cysharp.Threading.Tasks;
 
 namespace TSKT
 {
