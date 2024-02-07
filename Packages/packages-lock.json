@@ -4,8 +4,10 @@
       "version": "https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity",
       "depth": 0,
       "source": "git",
-      "dependencies": {},
-      "hash": "ef1c553b2883ac844f9eeab79449882a4ad67286"
+      "dependencies": {
+        "com.unity.modules.imgui": "1.0.0"
+      },
+      "hash": "2ef1bbf84f07e34b2f5750227a89150ef97c2d3d"
     },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
@@ -45,7 +47,7 @@
         "com.cysharp.unitask": "2.3.3",
         "com.github.enue.tskt_math": "0.21.5"
       },
-      "hash": "75bd747d355ca35f66c6c578d6977927899fb627"
+      "hash": "fdf0d74abdc8b086af02658c671fd3ec382c43b0"
     },
     "com.github.enue.tskt_ui": {
       "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package#r3",
