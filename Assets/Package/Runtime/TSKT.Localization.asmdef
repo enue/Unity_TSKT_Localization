@@ -13,6 +13,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.github.enue.tskt_ui",
+            "expression": "",
+            "define": "TSKT_UI_SUPPORT"
+        }
+    ],
     "noEngineReferences": false
 }

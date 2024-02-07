@@ -380,6 +380,7 @@ namespace TSKT
             return rp;
         }
 
+#if TSKT_UI_SUPPORT
         public void SubscribeToText(UnityEngine.UI.Text text)
         {
             if (Fixed)
@@ -409,6 +410,7 @@ namespace TSKT
             }
             TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
         }
+#endif
         static public LocalizationKey Join(in LocalizationKey separator, IEnumerable<LocalizationKey> values)
         {
             var builder = new LocalizationKeyBuilder();
