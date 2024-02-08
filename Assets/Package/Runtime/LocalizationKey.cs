@@ -381,7 +381,7 @@ namespace TSKT
         }
 
 #if TSKT_UI_SUPPORT
-        public void SubscribeToText(UnityEngine.UI.Text text)
+        public void SubscribeToText(UnityEngine.UI.Text text, int throttleFrame = 0)
         {
             if (Fixed)
             {
@@ -393,7 +393,14 @@ namespace TSKT
                 text.text = Localize();
                 return;
             }
-            TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
+            if (throttleFrame == 0)
+            {
+                TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty());
+            }
+            else
+            {
+                TextSubscriber.Subscribe(text, ToReadOnlyReactiveProperty().ThrottleLastFrame(throttleFrame));
+            }
         }
 
         public void SubscribeToText(TMPro.TMP_Text text)
