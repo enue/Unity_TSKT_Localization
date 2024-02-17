@@ -48,7 +48,7 @@ namespace TSKT
                     Text.font = _state.initialFont;
                     Text.fontMaterial = _state.initialMaterial;
                 }
-            }).AddTo(Text);
+            }).RegisterTo(Text.destroyCancellationToken);
         }
     }
 }

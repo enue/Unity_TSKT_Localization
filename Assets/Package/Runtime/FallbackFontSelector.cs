@@ -39,7 +39,7 @@ namespace TSKT
                 {
                     TMP_Settings.fallbackFontAssets[destinationIndex] = defaultFont;
                 }
-            }).AddTo(this);
+            }).RegisterTo(destroyCancellationToken);
         }
     }
 }

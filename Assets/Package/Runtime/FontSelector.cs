@@ -32,7 +32,7 @@ namespace TSKT
                 {
                     _state.text.font = _state.initialFont;
                 }
-            }).AddTo(Text);
+            }).RegisterTo(Text.destroyCancellationToken);
 
         }
     }
