@@ -43,7 +43,7 @@ namespace TSKT
             else
             {
                 fixedValue = null;
-                reactive = Localization.currentLanguage.Select(_ => Localization.Get(key)).ToReadOnlyReactiveProperty("");
+                reactive = Localization.currentLanguage.Select(key, static (_, _key) => Localization.Get(_key)).ToReadOnlyReactiveProperty("");
             }
         }
 
@@ -57,7 +57,7 @@ namespace TSKT
             else
             {
                 fixedValue = null;
-                reactive = Localization.currentLanguage.Select(_ => Localization.Get(index)).ToReadOnlyReactiveProperty("");
+                reactive = Localization.currentLanguage.Select(index, static (_, _index) => Localization.Get(_index)).ToReadOnlyReactiveProperty("");
             }
         }
 
@@ -75,14 +75,12 @@ namespace TSKT
             }
             if (Fixed)
             {
-                var origin = Localize();
-                var observable = value.reactive!.Select(_ => DoReplace(origin, key, _)).ToReadOnlyReactiveProperty("");
+                var observable = value.reactive!.Select((origin: Localize(), key), static (_, _states) => DoReplace(_states.origin, _states.key, _)).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
             if (value.Fixed)
             {
-                var _value = value.Localize();
-                var observable = reactive!.Select(_ => DoReplace(_, key, _value)).ToReadOnlyReactiveProperty("");
+                var observable = reactive!.Select((key, value: value.Localize()), static (_, _states) => DoReplace(_, _states.key, _states.value)).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
             {
@@ -143,7 +141,7 @@ namespace TSKT
                 return CreateRaw(text);
             }
 
-            return new LocalizationKey(reactive!.Select(_ => _.Replace(key, value)).ToReadOnlyReactiveProperty(""));
+            return new LocalizationKey(reactive!.Select((key, value), static (_, states) => _.Replace(states.key, states.value)).ToReadOnlyReactiveProperty(""));
         }
 
         readonly public LocalizationKey Replace(params (string key, string value)[] args)
@@ -180,7 +178,9 @@ namespace TSKT
             else if (Fixed)
             {
                 var origin = Localize();
-                var observable = value.reactive!.Select(_ => origin.Replace(key, _)).ToReadOnlyReactiveProperty("");
+                var observable = value.reactive!
+                    .Select((key, origin), static (_, _states) => _states.origin.Replace(_states.key, _))
+                    .ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
             else
@@ -271,7 +271,7 @@ namespace TSKT
                 return CreateRaw(text);
             }
 
-            return new LocalizationKey(reactive!.Select(_ => _.Replace(oldChar, newChar)).ToReadOnlyReactiveProperty(""));
+            return new LocalizationKey(reactive!.Select((oldChar, newChar), static (_, _states) => _.Replace(_states.oldChar, _states.newChar)).ToReadOnlyReactiveProperty(""));
         }
         readonly public LocalizationKey Concat(LocalizationKey right)
         {
@@ -354,12 +354,12 @@ namespace TSKT
             }
         }
 
-        readonly public string Localize()
+        public readonly string Localize()
         {
             return reactive?.CurrentValue ?? fixedValue ?? "";
         }
 
-        readonly public bool Empty
+        public readonly bool Empty
         {
             get
             {
