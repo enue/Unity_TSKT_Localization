@@ -21,10 +21,10 @@ namespace TSKT.Localizations
             }
 
             public string key = default!;
-            public List<Pair> pairs = new List<Pair>();
+            public List<Pair> pairs = new();
         }
 
-        public List<Item> items = new List<Item>();
+        public List<Item> items = new();
 
         public void Merge(Sheet source)
         {

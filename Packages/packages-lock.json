@@ -7,21 +7,21 @@
       "dependencies": {
         "com.unity.modules.imgui": "1.0.0"
       },
-      "hash": "fb04d0a50adc1a4f3e88dd46bd0e9199c58a392f"
+      "hash": "85599cbd569281616e176e1ceaa836aac457a048"
     },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "809d23edae0df58fd0f61b4b6f67855c59d1b2fb"
+      "hash": "8042b29ff87dd5506d7aad72bd6d8d7405985f27"
     },
     "com.github-glitchenzo.nugetforunity": {
       "version": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "17c6330d51a140eac037b9ea6f5d157a846535af"
+      "hash": "fe31ad0904abee296b5ea72c6073157accba59e8"
     },
     "com.github.enue.tskt_math": {
       "version": "https://github.com/enue/Unity_TSKT_Math.git?path=Assets/Package",

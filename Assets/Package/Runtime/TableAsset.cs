@@ -15,7 +15,7 @@ namespace TSKT.Localizations
 
         public Table Table
         {
-            get => new Table(sortedKeys, languages);
+            get => new(sortedKeys, languages);
             set
             {
                 sortedKeys = value.sortedKeys;
