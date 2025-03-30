@@ -309,7 +309,7 @@ namespace TSKT
                 return new LocalizationKey(observable);
             }
         }
-        public readonly LocalizationKey Concat(in ReadOnlySpan<LocalizationKey> values)
+        public readonly LocalizationKey Concat(params LocalizationKey[] values)
         {
             var items = new List<LocalizationKey>
             {
