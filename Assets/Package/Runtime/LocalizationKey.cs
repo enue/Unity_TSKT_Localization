@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 using R3;
 using System;
+using Cysharp.Text;
 
 namespace TSKT
 {
@@ -113,17 +114,22 @@ namespace TSKT
                             var closing = origin.IndexOf('}', second + 1);
                             if (closing != -1)
                             {
-                                string newValue;
+                                using var newValue = ZString.CreateStringBuilder();
                                 if (_value == "1")
                                 {
-                                    newValue = origin.Substring(first, second - first - 1);
+                                    newValue.Append(origin.AsSpan(first, second - first - 1));
                                 }
                                 else
                                 {
-                                    newValue = origin.Substring(second, closing - second);
+                                    newValue.Append(origin.AsSpan(second, closing - second));
                                 }
-                                origin = origin.Remove(index, closing - index + 1);
-                                return origin.Insert(index, newValue.Replace("_", _value));
+                                newValue.Replace("_", _value);
+
+                                using var originBuilder = ZString.CreateStringBuilder();
+                                originBuilder.Append(origin);
+                                originBuilder.Remove(index, closing - index + 1);
+                                originBuilder.Insert(index, newValue.AsSpan(), 1);
+                                return originBuilder.ToString();
                             }
                         }
                     }
@@ -144,24 +150,27 @@ namespace TSKT
             return new LocalizationKey(reactive!.Select((key, value), static (_, states) => _.Replace(states.key, states.value)).ToReadOnlyReactiveProperty(""));
         }
 
-        readonly public LocalizationKey Replace(params (string key, string value)[] args)
+        public readonly LocalizationKey Replace(params (string key, string value)[] args)
         {
             if (Fixed)
             {
-                var text = Localize();
-                foreach (var it in args)
+                using var builder = ZString.CreateStringBuilder();
+                builder.Append(Localize());
+                foreach (var (key, value) in args)
                 {
-                    text = text.Replace(it.key, it.value);
+                    builder.Replace(key, value);
                 }
-                return CreateRaw(text);
+                return CreateRaw(builder.ToString());
             }
 
             var observable = reactive!
-                .Select(_ =>
+                .Select(args, static (_, _args) =>
                 {
-                    foreach (var it in args)
+                    using var builder = ZString.CreateStringBuilder();
+                    builder.Append(_);
+                    foreach (var (key, value) in _args)
                     {
-                        _ = _.Replace(it.key, it.value);
+                        builder.Replace(key, value);
                     }
                     return _;
                 })
@@ -193,17 +202,18 @@ namespace TSKT
             }
         }
 
-        readonly public LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
+        public readonly LocalizationKey Replace(params (string key, LocalizationKey value)[] args)
         {
             if (Fixed)
             {
-                var origin = Localize();
+                using var origin = ZString.CreateStringBuilder();
+                origin.Append(Localize());
                 var fixedCount = 0;
                 for (int i = 0; i < args.Length; ++i)
                 {
                     if (args[i].value.Fixed)
                     {
-                        origin = origin.Replace(args[i].key, args[i].value.Localize());
+                        origin.Replace(args[i].key, args[i].value.Localize());
                     }
                     else
                     {
@@ -215,7 +225,7 @@ namespace TSKT
 
                 if (fixedCount == args.Length)
                 {
-                    return CreateRaw(origin);
+                    return CreateRaw(origin.ToString());
                 }
                 else if (fixedCount == 0)
                 {
@@ -226,17 +236,18 @@ namespace TSKT
                     replacers = args.Skip(fixedCount).ToArray();
                 }
 
-                var observable = Observable.CombineLatest(replacers.Select(_ => _.value.ToReadOnlyReactiveProperty()))
-                    .Select(_ =>
+                var observable = Observable.CombineLatest(replacers.Select(static _ => _.value.ToReadOnlyReactiveProperty()))
+                    .Select((origin: origin.ToString(), replacers), static (_, _states) =>
                 {
-                    var result = origin;
+                    using var result = ZString.CreateStringBuilder();
+                    result.Append(_states.origin);
                     var index = 0;
                     foreach (var it in _)
                     {
-                        result = result.Replace(replacers[index].key, it);
+                        result.Replace(_states.replacers[index].key, it);
                         ++index;
                     }
-                    return result;
+                    return result.ToString();
                 }).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
@@ -247,18 +258,19 @@ namespace TSKT
                 {
                     ToReadOnlyReactiveProperty()
                 };
-                foreach (var it in replacers)
+                foreach (var (key, value) in replacers)
                 {
-                    properties.Add(it.value.ToReadOnlyReactiveProperty());
+                    properties.Add(value.ToReadOnlyReactiveProperty());
                 }
-                var observable = Observable.CombineLatest(properties).Select(_ =>
+                var observable = Observable.CombineLatest(properties).Select(replacers, static (_, _replacers) =>
                 {
-                    var result = _[0];
-                    foreach (var it in _.Skip(1).Select((_value, _index) => (_value, _index)))
+                    using var result = ZString.CreateStringBuilder();
+                    result.Append(_[0]);
+                    foreach (var it in _.Skip(1).Select(static (_value, _index) => (_value, _index)))
                     {
-                        result = result.Replace(replacers[it._index].key, it._value);
+                        result.Replace(_replacers[it._index].key, it._value);
                     }
-                    return result;
+                    return result.ToString();
                 }).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
@@ -277,30 +289,32 @@ namespace TSKT
         {
             if (Fixed && right.Fixed)
             {
-                return CreateRaw(Localize() + right.Localize());
+                return CreateRaw(ZString.Concat(Localize(), right.Localize()));
             }
             else if (Fixed)
             {
                 var left = Localize();
-                var observable = right.reactive!.Select(_ => left + _).ToReadOnlyReactiveProperty("");
+                var observable = right.reactive!.Select(left, static (_, _left) => ZString.Concat(_left, _)).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
             else if (right.Fixed)
             {
                 var _right = right.Localize();
-                var observable = reactive!.Select(_ => _ + _right).ToReadOnlyReactiveProperty("");
+                var observable = reactive!.Select(_right, static (_, right) => ZString.Concat(_, right)).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
             else
             {
-                var observable = reactive!.CombineLatest(right.reactive!, (_left, _right) => _left + _right).ToReadOnlyReactiveProperty("");
+                var observable = reactive!.CombineLatest(right.reactive!, (_left, _right) => ZString.Concat(_left, _right)).ToReadOnlyReactiveProperty("");
                 return new LocalizationKey(observable);
             }
         }
-        public readonly LocalizationKey Concat(params LocalizationKey[] values)
+        public readonly LocalizationKey Concat(in ReadOnlySpan<LocalizationKey> values)
         {
-            var items = new List<LocalizationKey>();
-            items.Add(this);
+            var items = new List<LocalizationKey>
+            {
+                this
+            };
 
             foreach (var it in values)
             {
@@ -327,10 +341,10 @@ namespace TSKT
                 return items[0];
             }
 
-            var observable = Observable.CombineLatest(items.Select(_ => _.ToReadOnlyReactiveProperty()))
-                .Select(_ =>
+            var observable = Observable.CombineLatest(items.Select(static _ => _.ToReadOnlyReactiveProperty()))
+                .Select(static _ =>
                 {
-                    var builder = new System.Text.StringBuilder();
+                    using var builder = ZString.CreateStringBuilder();
                     foreach (var it in _)
                     {
                         builder.Append(it);
