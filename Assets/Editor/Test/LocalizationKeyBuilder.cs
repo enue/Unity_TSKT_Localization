@@ -30,7 +30,7 @@ namespace TSKT.Tests
         {
             var builder = new LocalizationKeyBuilder();
             builder.Append(LocalizationKey.CreateRaw("a"));
-            var source = new ReactiveProperty<string>("b");
+            using var source = new ReactiveProperty<string>("b");
             builder.Append(new LocalizationKey(source));
             builder.Append(LocalizationKey.CreateRaw("c"));
 
