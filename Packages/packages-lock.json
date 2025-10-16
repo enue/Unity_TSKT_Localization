@@ -28,7 +28,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fe31ad0904abee296b5ea72c6073157accba59e8"
+      "hash": "a7c6b49a0141a5bff9b1983e38137522ef61977d"
     },
     "com.github.enue.tskt_math": {
       "version": "https://github.com/enue/Unity_TSKT_Math.git?path=Assets/Package",
@@ -59,7 +59,7 @@
       "hash": "de3095ba77271d4ce57b6f0ca1ebcd7e596b3774"
     },
     "com.unity.ai.navigation": {
-      "version": "2.0.6",
+      "version": "2.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -74,11 +74,11 @@
       "dependencies": {}
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.22",
+      "version": "2.0.25",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.test-framework": "1.1.9"
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://packages.unity.com"
     },
@@ -98,14 +98,17 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "2.1.5",
+      "version": "2.4.3",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.modules.assetbundle": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.5.1",
+      "version": "1.6.0",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
@@ -271,7 +274,8 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.hierarchycore": "1.0.0"
+        "com.unity.modules.hierarchycore": "1.0.0",
+        "com.unity.modules.physics": "1.0.0"
       }
     },
     "com.unity.modules.umbra": {
