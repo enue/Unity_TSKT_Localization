@@ -392,9 +392,7 @@ namespace TSKT
             {
                 return observable;
             }
-            var rp = new ReactiveProperty<string>(Localize());
-            rp.OnCompleted();
-            return rp;
+            return (new string[] { Localize() }).ToObservable();
         }
 
 #if TSKT_UI_SUPPORT
