@@ -398,16 +398,6 @@ namespace TSKT
 #if TSKT_UI_SUPPORT
         public void SubscribeToText(UnityEngine.UI.Text text, int throttleFrame = 0)
         {
-            if (Fixed)
-            {
-                text.text = Localize();
-                return;
-            }
-            if (Localization.Languages?.Length == 1)
-            {
-                text.text = Localize();
-                return;
-            }
             if (throttleFrame == 0)
             {
                 TextSubscriber.Subscribe(text, ToObservable());
@@ -420,16 +410,6 @@ namespace TSKT
 
         public void SubscribeToText(TMPro.TMP_Text text)
         {
-            if (Fixed)
-            {
-                text.text = Localize();
-                return;
-            }
-            if (Localization.Languages?.Length == 1)
-            {
-                text.text = Localize();
-                return;
-            }
             TextSubscriber.Subscribe(text, ToObservable());
         }
 #endif
