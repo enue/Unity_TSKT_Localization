@@ -36,7 +36,7 @@ namespace TSKT
         }
         public LocalizationKey(string key)
         {
-            if (Localization.Languages?.Length == 1)
+            if (Localization.currentLanguage.IsCompletedOrDisposed)
             {
                 fixedValue = Localization.Get(key);
                 observable = null;
@@ -50,7 +50,7 @@ namespace TSKT
 
         public LocalizationKey(int index)
         {
-            if (Localization.Languages?.Length == 1)
+            if (Localization.currentLanguage.IsCompletedOrDisposed)
             {
                 fixedValue = Localization.Get(index);
                 observable = null;
