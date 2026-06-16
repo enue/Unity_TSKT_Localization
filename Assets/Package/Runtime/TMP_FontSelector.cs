@@ -31,7 +31,7 @@ namespace TSKT
 
         void Start()
         {
-            Localization.CurrentLanguageAsObservable.Subscribe((initialFont: Text.font, initialMaterial: Text.fontSharedMaterial), (_, _state) =>
+            Localization.currentLanguage.Subscribe((initialFont: Text.font, initialMaterial: Text.fontSharedMaterial), (_, _state) =>
             {
                 var index = System.Array.FindIndex(styles, style => style.language == _);
                 if (index >= 0)
