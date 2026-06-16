@@ -27,7 +27,7 @@ namespace TSKT
 
         void Start()
         {
-            Localization.currentLanguage.Subscribe(language =>
+            Localization.CurrentLanguageAsObservable.Subscribe(language =>
             {
                 var index = System.Array.FindIndex(pairs, _ => _.language == language);
 

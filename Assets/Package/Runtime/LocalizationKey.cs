@@ -36,7 +36,7 @@ namespace TSKT
         }
         public LocalizationKey(string key)
         {
-            if (Localization.Languages?.Length == 1)
+            if (Localization.LanguageFixed)
             {
                 fixedValue = Localization.Get(key);
                 observable = null;
@@ -44,13 +44,13 @@ namespace TSKT
             else
             {
                 fixedValue = null;
-                observable = Localization.currentLanguage.Select(key, static (_, _key) => Localization.Get(_, _key));
+                observable = Localization.CurrentLanguageAsObservable.Select(key, static (_, _key) => Localization.Get(_, _key));
             }
         }
 
         public LocalizationKey(int index)
         {
-            if (Localization.Languages?.Length == 1)
+            if (Localization.LanguageFixed)
             {
                 fixedValue = Localization.Get(index);
                 observable = null;
@@ -58,7 +58,7 @@ namespace TSKT
             else
             {
                 fixedValue = null;
-                observable = Localization.currentLanguage.Select(index, static (_, _index) => Localization.Get(_index));
+                observable = Localization.CurrentLanguageAsObservable.Select(index, static (_, _index) => Localization.Get(_index));
             }
         }
 

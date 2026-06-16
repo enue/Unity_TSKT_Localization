@@ -14,11 +14,19 @@ namespace TSKT
 
         Table? table;
 
-        public static readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
-        static public SystemLanguage CurrentLanguage
+        static readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
+        public static Observable<SystemLanguage> CurrentLanguageAsObservable => currentLanguage;
+        public static SystemLanguage CurrentLanguage
         {
             get => currentLanguage.Value;
-            set => currentLanguage.Value = value;
+            set
+            {
+                if (currentLanguage.IsCompletedOrDisposed)
+                {
+                    return;
+                }
+                currentLanguage.Value = value;
+            }
         }
 
         Localization()
@@ -29,6 +37,12 @@ namespace TSKT
         {
             Instance.table = table;
         }
+
+        public static void FixLanguage()
+        {
+            currentLanguage.OnCompleted();
+        }
+        public static bool LanguageFixed => currentLanguage.IsCompletedOrDisposed;
 
         public static string Get(int key)
         {
