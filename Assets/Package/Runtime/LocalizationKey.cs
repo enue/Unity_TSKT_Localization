@@ -351,7 +351,7 @@ namespace TSKT
             return new LocalizationKey(observable);
         }
 
-        readonly public LocalizationKey Trim()
+        public readonly LocalizationKey Trim()
         {
             if (Fixed)
             {
@@ -361,6 +361,32 @@ namespace TSKT
             else
             {
                 var observable = this.observable!.Select(_ => _.Trim());
+                return new LocalizationKey(observable);
+            }
+        }
+        public readonly LocalizationKey TrimStart()
+        {
+            if (Fixed)
+            {
+                var result = Localize().TrimStart();
+                return CreateRaw(result);
+            }
+            else
+            {
+                var observable = this.observable!.Select(_ => _.TrimStart());
+                return new LocalizationKey(observable);
+            }
+        }
+        public readonly LocalizationKey TrimEnd()
+        {
+            if (Fixed)
+            {
+                var result = Localize().TrimEnd();
+                return CreateRaw(result);
+            }
+            else
+            {
+                var observable = this.observable!.Select(_ => _.TrimEnd());
                 return new LocalizationKey(observable);
             }
         }
