@@ -418,7 +418,7 @@ namespace TSKT
             {
                 return observable;
             }
-            return (new string[] { Localize() }).ToObservable();
+            return Observable.Return(Localize());
         }
 
 #if TSKT_UI_SUPPORT
