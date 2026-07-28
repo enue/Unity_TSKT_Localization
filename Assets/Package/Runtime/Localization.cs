@@ -17,12 +17,16 @@ namespace TSKT
         readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
         public static ReactiveProperty<SystemLanguage> CurrentLanguage => Instance.currentLanguage;
 
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Init()
+        {
+            instance = null;
+        }
+
         Localization()
         {
-            Application.exitCancellationToken.Register(() =>
-            {
-                instance = null;
-            });
+            // nop
         }
 
         public static void SetTable(Table table)
