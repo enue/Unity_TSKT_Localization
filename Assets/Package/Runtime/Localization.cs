@@ -10,19 +10,19 @@ namespace TSKT
     public class Localization
     {
         static Localization? instance;
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Init()
+        {
+            instance = null;
+        }
+#endif
         static Localization Instance => instance ??= new Localization();
 
         Table? table;
 
         readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
         public static ReactiveProperty<SystemLanguage> CurrentLanguage => Instance.currentLanguage;
-
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void Init()
-        {
-            instance = null;
-        }
 
         Localization()
         {
