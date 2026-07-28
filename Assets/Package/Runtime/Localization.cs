@@ -14,15 +14,15 @@ namespace TSKT
 
         Table? table;
 
-        public static readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
-        static public SystemLanguage CurrentLanguage
-        {
-            get => currentLanguage.Value;
-            set => currentLanguage.Value = value;
-        }
+        readonly ReactiveProperty<SystemLanguage> currentLanguage = new(default);
+        public static ReactiveProperty<SystemLanguage> CurrentLanguage => Instance.currentLanguage;
 
         Localization()
         {
+            Application.exitCancellationToken.Register(() =>
+            {
+                instance = null;
+            });
         }
 
         public static void SetTable(Table table)
@@ -32,7 +32,7 @@ namespace TSKT
 
         public static string Get(int key)
         {
-            return Get(CurrentLanguage, key);
+            return Get(CurrentLanguage.CurrentValue, key);
         }
         public static string Get(SystemLanguage language, int key)
         {
@@ -41,7 +41,7 @@ namespace TSKT
 
         public static string Get(string key)
         {
-            return Get(CurrentLanguage, key);
+            return Get(CurrentLanguage.CurrentValue, key);
         }
 
         public static string Get(SystemLanguage language, string key)

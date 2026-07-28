@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using R3;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace TSKT
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Initialize()
         {
-            Localization.CurrentLanguage = SystemLanguage.Japanese;
+            Localization.CurrentLanguage.Value = SystemLanguage.Japanese;
             Localization.SetTable(Resources.Load<Localizations.TableAsset>("TableAsset").Table);
         }
 
@@ -27,13 +28,13 @@ namespace TSKT
 
         public void OnClickedJapaneseButton()
         {
-            Localization.CurrentLanguage = SystemLanguage.Japanese;
+            Localization.CurrentLanguage.Value = SystemLanguage.Japanese;
             Refresh();
         }
 
         public void OnClickedEnglishButton()
         {
-            Localization.CurrentLanguage = SystemLanguage.English;
+            Localization.CurrentLanguage.Value = SystemLanguage.English;
             Refresh();
         }
 

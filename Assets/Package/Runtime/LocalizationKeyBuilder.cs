@@ -9,6 +9,35 @@ namespace TSKT
     public class LocalizationKeyBuilder
     {
         readonly List<LocalizationKey> items = new();
+        public LocalizationKeyBuilder Prepend(LocalizationKey key)
+        {
+            if (key.Empty)
+            {
+                return this;
+            }
+            if (items.Count == 0)
+            {
+                items.Add(key);
+            }
+            else if (key.Fixed)
+            {
+                var first = items[0];
+                if (first.Fixed)
+                {
+                    first = first.Concat(key);
+                    items[0] = first;
+                }
+                else
+                {
+                    items.Insert(0, key);
+                }
+            }
+            else
+            {
+                items.Insert(0, key);
+            }
+            return this;
+        }
 
         public LocalizationKeyBuilder Append(LocalizationKey key)
         {
