@@ -14,6 +14,7 @@ namespace TSKT
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Init()
         {
+            instance?.currentLanguage.Dispose();
             instance = null;
         }
 #endif
@@ -26,7 +27,6 @@ namespace TSKT
 
         Localization()
         {
-            currentLanguage.RegisterTo(Application.exitCancellationToken);
         }
 
         public static void SetTable(Table table)
