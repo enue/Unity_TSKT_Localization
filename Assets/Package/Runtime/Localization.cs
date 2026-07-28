@@ -26,7 +26,7 @@ namespace TSKT
 
         Localization()
         {
-            // nop
+            currentLanguage.RegisterTo(Application.exitCancellationToken);
         }
 
         public static void SetTable(Table table)
