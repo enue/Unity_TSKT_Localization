@@ -50,13 +50,14 @@
       "hash": "fdf0d74abdc8b086af02658c671fd3ec382c43b0"
     },
     "com.github.enue.tskt_ui": {
-      "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package#r3",
+      "version": "https://github.com/enue/Unity_TSKT_UI.git?path=Assets/Package",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.cysharp.r3": "0.1.2"
+        "com.cysharp.r3": "1.3.1",
+        "com.cysharp.zstring": "2.6.0"
       },
-      "hash": "de3095ba77271d4ce57b6f0ca1ebcd7e596b3774"
+      "hash": "bcee8280f258616b7a2ddb9b03062deb6c64f844"
     },
     "com.unity.ai.navigation": {
       "version": "2.0.14",
